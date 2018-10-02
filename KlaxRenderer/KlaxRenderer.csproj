@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{94BAB26E-C944-44D7-A603-CE974F6642B6}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>KlaxCore</RootNamespace>
-    <AssemblyName>KlaxCore</AssemblyName>
+    <ProjectGuid>{71E9ED84-3374-452D-8BFE-E77393203955}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>KlaxRenderer</RootNamespace>
+    <AssemblyName>KlaxRenderer</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -30,6 +30,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -71,31 +74,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Game.cs" />
-    <Compile Include="Core\ValueEvolution.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Camera\BaseCamera.cs" />
+    <Compile Include="Camera\CameraManager.cs" />
+    <Compile Include="Camera\ICamera.cs" />
+    <Compile Include="Graphics\IShader.cs" />
+    <Compile Include="Graphics\Mesh.cs" />
+    <Compile Include="Graphics\D3DRenderer.cs" />
+    <Compile Include="Graphics\IDrawable.cs" />
+    <Compile Include="Graphics\ColorShader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renderer.cs" />
+    <Compile Include="Tests\TestCube.cs" />
+    <Compile Include="Tests\TestTriangle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Shaders\pixelShader.hlsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Shaders\vertexShader.hlsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Folder Include="RenderNodes\" />
+    <Folder Include="Scene\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KlaxMath\KlaxMath.csproj">
       <Project>{11eea24a-8356-46d1-9642-f895491a7f6d}</Project>
       <Name>KlaxMath</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\KlaxRenderer\KlaxRenderer.csproj">
-      <Project>{71e9ed84-3374-452d-8bfe-e77393203955}</Project>
-      <Name>KlaxRenderer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

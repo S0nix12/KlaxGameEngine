@@ -23,7 +23,7 @@ namespace KlaxCore.Core
 
             InitializeDeviceResources();
             InitShaders();
-            InitMesh();
+            InitMesh();            
         }
 
         public void Dispose()
@@ -37,7 +37,8 @@ namespace KlaxCore.Core
             pixelShader.Dispose();
             vertexShader.Dispose();
             inputLayout.Dispose();
-            inputSignature.Dispose();            
+            inputSignature.Dispose();          
+            
         }
 
         public void Run()
@@ -54,6 +55,7 @@ namespace KlaxCore.Core
         private void InitializeDeviceResources()
         {
             ModeDescription backBufferDesc = new ModeDescription(Width, Height, new Rational(60, 1), Format.R8G8B8A8_UNorm);
+            
             SwapChainDescription swapChainDesc = new SwapChainDescription()
             {
                 ModeDescription = backBufferDesc,
@@ -63,7 +65,7 @@ namespace KlaxCore.Core
                 OutputHandle = renderForm.Handle,
                 IsWindowed = true
             };
-
+            
             D3D11.Device.CreateWithSwapChain(DriverType.Hardware, D3D11.DeviceCreationFlags.None, swapChainDesc, out d3dDevice, out swapChain);
             d3dDeviceContext = d3dDevice.ImmediateContext;
 
@@ -141,7 +143,8 @@ namespace KlaxCore.Core
 
         private D3D11.InputElement[] inputElements = new D3D11.InputElement[]
         {
-            new D3D11.InputElement("POSITION", 0, Format.R32G32B32_Float, 0)
+                    new D3D11.InputElement("POSITION", 0, SharpDX.DXGI.Format.R32G32B32_Float, 0),
+                    new D3D11.InputElement("COLOR", 0, SharpDX.DXGI.Format.R32G32B32A32_Float, 0)
         };
 
         private ShaderSignature inputSignature;
