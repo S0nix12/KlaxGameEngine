@@ -1,0 +1,181 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:KlaxEditor.Views.KlaxScript"
+                    xmlns:vm="clr-namespace:KlaxEditor.ViewModels.KlaxScript"
+                    xmlns:ew="clr-namespace:KlaxEditor.ViewModels.EditorWindows"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:behaviors="clr-namespace:KlaxEditor.Behaviors"
+                    xmlns:converters="clr-namespace:KlaxEditor.Converters"
+					xmlns:ins="clr-namespace:KlaxEditor.UserControls.InspectorControls">
+	<Style TargetType="{x:Type local:PinControl}">
+		<Setter Property="ParentNodeView" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ScriptNodeView}}}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:PinControl}">
+					<ContentPresenter />
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+    </Style>
+
+	<Style TargetType="{x:Type local:SmoothLineControl}" x:Key="NodeConnectionStyle">
+		<Setter Property="StartPoint" Value="{Binding StartPoint}" />
+		<Setter Property="EndPoint" Value="{Binding EndPoint}" />
+		<Setter Property="Stroke" Value="{Binding StrokeColor}" />
+		<Setter Property="StrokeThickness" Value="2" />
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="StrokeThickness" Value="5" />
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+
+	<Style x:Key="ValuePinBorder" TargetType="{x:Type Border}">
+		<Setter Property="CornerRadius" Value="1" />
+		<Setter Property="Width" Value="10" />
+		<Setter Property="Height" Value="10" />
+		<Setter Property="Background" Value="{Binding PinInnerColor}" />
+		<Setter Property="BorderBrush" Value="{Binding PinOuterColor}" />
+		<Setter Property="BorderThickness" Value="1.5" />
+		<Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="RenderTransform" >
+					<Setter.Value>
+						<ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+					</Setter.Value>
+				</Setter>
+            </Trigger>
+            <DataTrigger Binding="{Binding IsLiteralOnly}" Value="True">
+                <Setter Property="Background" Value="{Binding PinOuterColor}" />
+            </DataTrigger>
+        </Style.Triggers>
+	</Style>
+
+	<Style TargetType="{x:Type Border}" x:Key="HoverBorder">
+		<Setter Property="Padding" Value="3,2"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="CornerRadius" Value="3" />
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Background" Value="{StaticResource ListItem.MouseOver.Background}"/>
+				<Setter Property="BorderBrush" Value="{StaticResource ListItem.MouseOver.Border}"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<converters:LodToVisibilityConverter x:Key="LodToVisibilityConverter" />
+	<converters:TextStartUpperConverter x:Key="TextStartUpperConverter" />
+	<converters:VisibilityCombineMultiConverter x:Key="VisibilityCombineMultiConverter" />
+
+	<DataTemplate x:Key="OutputPinTemplate" DataType="{x:Type vm:COutputPinViewModel}">
+        <Border Style="{StaticResource HoverBorder}" ToolTip="{Binding Tooltip}">
+			<i:Interaction.Behaviors>
+				<behaviors:EventToCommandBehavior Event="MouseDown" Command="{Binding MouseDownCommand}" PassArguments="True" />
+			</i:Interaction.Behaviors>
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Margin="5,0" VerticalAlignment="Center" Text="{Binding Name}" Visibility="{Binding DataContext.Lod, Converter={StaticResource LodToVisibilityConverter}, ConverterParameter=3, RelativeSource={RelativeSource AncestorType=local:NodeGraphView}}"/>
+				<local:PinControl ConnectionPoint="{Binding ConnectionPoint, Mode=OneWayToSource}">
+					<Border Style="{StaticResource ValuePinBorder}" AllowDrop="True" />
+				</local:PinControl>
+			</StackPanel>
+		</Border>
+	</DataTemplate>
+
+	<DataTemplate x:Key="InputPinTemplate" DataType="{x:Type vm:CInputPinViewModel}">
+        <Border Style="{StaticResource HoverBorder}" Padding="3,1" ToolTip="{Binding Tooltip}">
+			<i:Interaction.Behaviors>
+				<behaviors:EventToCommandBehavior Event="MouseDown" Command="{Binding MouseDownCommand}" PassArguments="True" />
+			</i:Interaction.Behaviors>
+			<StackPanel Orientation="Horizontal">
+				<local:PinControl ConnectionPoint="{Binding ConnectionPoint, Mode=OneWayToSource}">
+					<Border Style="{StaticResource ValuePinBorder}" AllowDrop="True" />
+				</local:PinControl>
+				<TextBlock Margin="5,0" Text="{Binding Name, Converter={StaticResource TextStartUpperConverter}}" FontSize="13" VerticalAlignment="Center" Visibility="{Binding DataContext.Lod, Converter={StaticResource LodToVisibilityConverter}, ConverterParameter=3, RelativeSource={RelativeSource AncestorType=local:NodeGraphView}}"/>
+				<ins:StandaloneInspectorControl InspectorControlType="{Binding ValueType}" Value="{Binding Literal, Mode=TwoWay}" MinWidth="30" VerticalAlignment="Center">
+					<ins:StandaloneInspectorControl.Visibility>
+						<MultiBinding Converter="{StaticResource VisibilityCombineMultiConverter}">
+							<Binding Path="DataContext.Lod" Converter="{StaticResource LodToVisibilityConverter}" ConverterParameter="2" RelativeSource="{RelativeSource AncestorType=local:NodeGraphView}" />
+							<Binding Path="IsConnected" Converter="{StaticResource BoolToVisibility_TrueCollapsed_FalseVisible}" />
+						</MultiBinding>
+					</ins:StandaloneInspectorControl.Visibility>
+				</ins:StandaloneInspectorControl>
+				<!--<TextBox Style="{StaticResource InputElementTextBox}" Text="{Binding Literal, Mode=TwoWay}" MinWidth="20" VerticalAlignment="Center" Height="15" Visibility="{Binding DataContext.Lod, Converter={StaticResource LodToVisibilityConverter}, ConverterParameter=2, RelativeSource={RelativeSource AncestorType=local:NodeGraphView}}"/>-->
+			</StackPanel>
+		</Border>
+	</DataTemplate>
+
+	<Style x:Key="AddNodeTreeViewItemStyle" TargetType="{x:Type TreeViewItem}">
+		<Setter Property="FontWeight" Value="Normal" />
+		<Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+		<Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type TreeViewItem}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition MinWidth="5" Width="Auto"/>
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition/>
+						</Grid.RowDefinitions>
+						<ToggleButton x:Name="Expander"
+						  Style="{StaticResource ExpandCollapseToggleStyle}"
+						  IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+						  ClickMode="Press"/>
+						<Border x:Name="Bd"
+						  Grid.Column="1"
+						  Background="{TemplateBinding Background}"
+						  BorderBrush="{TemplateBinding BorderBrush}"
+						  BorderThickness="{TemplateBinding BorderThickness}"
+						  Padding="{TemplateBinding Padding}">
+							<ContentPresenter x:Name="PART_Header" ContentSource="Header"
+							  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+						</Border>
+						<ItemsPresenter x:Name="ItemsHost" Grid.Row="1"  Grid.Column="1"/>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter TargetName="Bd" Property="Background" Value="{StaticResource TreeItem.MouseOver.Background}"/>
+							<Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource TreeItem.MouseOver.Border}"/>
+							<Setter TargetName="Bd" Property="CornerRadius" Value="2" />
+						</Trigger>
+						<Trigger Property="IsSelected" Value="True">
+							<Setter TargetName="Bd" Property="Background" Value="{StaticResource Orange}"/>
+							<Setter TargetName="Bd" Property="CornerRadius" Value="2" />
+						</Trigger>
+						<Trigger Property="IsExpanded"  Value="false">
+							<Setter TargetName="ItemsHost"  Property="Visibility" Value="Collapsed"/>
+						</Trigger>
+						<Trigger Property="HasItems" Value="false">
+							<Setter TargetName="Expander" Property="Visibility" Value="Hidden"/>
+						</Trigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="HasHeader" Value="false"/>
+								<Condition Property="Width" Value="Auto"/>
+							</MultiTrigger.Conditions>
+							<Setter TargetName="PART_Header"  Property="MinWidth"  Value="75"/>
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="HasHeader"  Value="false"/>
+								<Condition Property="Height"  Value="Auto"/>
+							</MultiTrigger.Conditions>
+							<Setter TargetName="PART_Header"   Property="MinHeight"  Value="19"/>
+						</MultiTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+
+		<Style.Triggers>
+			<Trigger Property="IsSelected" Value="True">
+				<Setter Property="FontWeight" Value="Bold" />
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+</ResourceDictionary>

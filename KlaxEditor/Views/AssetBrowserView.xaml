@@ -1,0 +1,171 @@
+﻿<UserControl x:Class="KlaxEditor.Views.AssetBrowserView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:KlaxEditor.Views"
+             xmlns:self="clr-namespace:KlaxEditor.ViewModels.EditorWindows"
+             xmlns:controls="clr-namespace:Digimezzo.WPFControls;assembly=Digimezzo.WPFControls"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:be="clr-namespace:KlaxEditor.Behaviors"
+             xmlns:assetBrowser="clr-namespace:KlaxEditor.UserControls.AssetBrowser"
+             xmlns:userControls="clr-namespace:KlaxEditor.UserControls"
+             xmlns:tk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="900"
+             x:Name="AssetBrowserControl">
+    <UserControl.Resources>
+        <Style x:Key="FolderButtonStyle"  TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Padding="{TemplateBinding Padding}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" CornerRadius="2">
+                            <Grid>
+                                <ContentPresenter x:Name="MyContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3F3F41" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{StaticResource LightOrange}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <SolidColorBrush x:Key="TopBackground" Color="#333F3F46" />
+        <SolidColorBrush x:Key="TopBorder" Color="#993F3F46" />
+        <Style x:Key="TopBarArea" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource TopBackground}" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{StaticResource TopBorder}" />
+        </Style>
+
+        <Style x:Key="AssetViewerItem" BasedOn="{StaticResource AssetSelectorItemContainerStyle}" TargetType="ListBoxItem">
+            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Style="{StaticResource TopBarArea}" Margin="1, 1, 3, 1">
+                <tk:DropDownButton x:Name="CreateButton" Width="60" Content="Create" HorizontalAlignment="Left" Margin="3" FontSize="12" Padding="2" Style="{StaticResource CreateButtonStyle}" DropDownContentBackground="{StaticResource GrayMenuBackground}">
+                    <tk:DropDownButton.DropDownContent>
+                        <StackPanel>
+							<MenuItem Header="Create Material" Command="{Binding CreateMaterialCommand}" Click="CreateMenuItem_OnClick"/>
+							<MenuItem Header="Create Entity" Command="{Binding CreateEntityCommand}" Click="CreateMenuItem_OnClick"/>
+							<MenuItem Header="Create Script Interface" Command="{Binding CreateInterfaceCommand}" Click="CreateMenuItem_OnClick"/>
+                        </StackPanel>
+                    </tk:DropDownButton.DropDownContent>
+                </tk:DropDownButton>
+            </Border>
+            <Border Grid.Column="1" Style="{StaticResource TopBarArea}" Margin="1, 1, 3, 1">
+                <Button Content="Import" HorizontalAlignment="Left" Style="{StaticResource ImportButtonStyle}" Margin="3" FontSize="12" Padding="2" Command="{Binding ImportCommand}"/>
+            </Border>
+            <Border Grid.Column="2" Style="{StaticResource TopBarArea}" Margin="1, 1, 0, 1">
+                <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding SelectedFolderPath}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"></StackPanel>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0" Style="{StaticResource FolderButtonStyle}" Content="{Binding Name}" Margin="3" Padding="3,2" FontSize="12" Command="{Binding SelectCommand}"/>
+                                    <Path Grid.Column="1" x:Name="ArrowPanelPath" HorizontalAlignment="Right" VerticalAlignment="Center" Fill="{StaticResource LightGray}" Data="M0,0 L0,10 L5,5 z"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="1" PreviewMouseMove="OnMouseMove">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TreeView HorizontalContentAlignment="Stretch" BorderThickness="1" Grid.Column="0" Background="{StaticResource DarkGray}" ItemsSource="{Binding RootFolders}" ItemContainerStyle="{StaticResource StretchedTreeViewItemStyle}">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type self:CDirectoryEntry}" ItemsSource="{Binding SubDirectories}">
+                        <Border Background="Transparent" HorizontalAlignment="Stretch" PreviewMouseLeftButtonDown="FolderEntryOnMouseDown" AllowDrop="True">
+                            <i:Interaction.Behaviors>
+                                <be:EventToCommandBehavior Event="DragEnter" Command="{Binding DragEnterCommand}" PassArguments="True"/>
+                                <be:EventToCommandBehavior Event="DragOver" Command="{Binding DragOverCommand}" PassArguments="True"/>
+                                <be:EventToCommandBehavior Event="Drop" Command="{Binding DropCommand}" PassArguments="True"/>
+                            </i:Interaction.Behaviors>
+                            <Border.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Add Folder" Command="{Binding AddFolderCommand}"/>
+                                    <MenuItem Header="Delete" Command="{Binding DeleteFolderCommand}"/>
+                                </ContextMenu>
+                            </Border.ContextMenu>
+                            <userControls:EditableTextBlock Label="{Binding Name}" EditText="{Binding EditName, Mode=TwoWay}" HorizontalContentAlignment="Left" IsInEditMode="{Binding IsInEditMode, ElementName=AssetBrowserControl, Mode=OneWayToSource}"/>
+                        </Border>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+            <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="3" Background="{StaticResource InspectorPropertySplitterColor}"/>
+            <controls:MultiSelectListBox x:Name="AssetSelectionViewer" SelectionMode="Extended" HorizontalContentAlignment="Left" ItemContainerStyle="{StaticResource AssetViewerItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{StaticResource DarkGray}" Grid.Column="2" ItemsSource="{Binding ShownAssets}">
+                <ListBox.InputBindings>
+                    <KeyBinding Key="Delete" Command="{Binding DeleteAssetCommand}" />
+                </ListBox.InputBindings>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <controls:VirtualizingWrapPanel ChildWidth="90" ChildHeight="100" CanVerticallyScroll="True" CanHorizontallyScroll="False" Background="{StaticResource DarkGray}"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type self:CAssetEntryViewModel}">
+                        <Grid Background="Transparent" Width="80" Height="90" PreviewMouseLeftButtonDown="AssetEntryOnMouseDown">
+                            <i:Interaction.Behaviors>
+                                <be:EventToCommandBehavior Event="PreviewMouseLeftButtonDown" Command="{Binding MouseLeftDownCommand}" PassArguments="True" />
+                            </i:Interaction.Behaviors>
+                            <Grid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Delete" Command="{Binding DeleteAssetCommand}"/>
+                                </ContextMenu>
+                            </Grid.ContextMenu>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Border x:Name="AssetItemBorder" Grid.Row="0" Padding="5" Margin="8" BorderThickness="2" BorderBrush="{Binding BorderColor}">
+                                <Border.Background>
+                                    <SolidColorBrush Color="{Binding Color}" Opacity="0.5" />
+                                </Border.Background>
+                                <TextBlock Text="{Binding TypeName}" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <userControls:EditableTextBlock Grid.Row="1" Label="{Binding Name}" EditText="{Binding EditName, Mode=TwoWay}" HorizontalContentAlignment="Center" IsInEditMode="{Binding IsInEditMode, ElementName=AssetBrowserControl, Mode=OneWayToSource}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </controls:MultiSelectListBox>
+        </Grid>
+    </Grid>
+</UserControl>

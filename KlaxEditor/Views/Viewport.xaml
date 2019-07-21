@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="KlaxEditor.Views.Viewport"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:KlaxEditor.Views"
+             xmlns:viewport="clr-namespace:WpfSharpDxControl"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:KlaxEditor.Behaviors"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+		<Border BorderBrush="{StaticResource Orange}" Background="Black" BorderThickness="2" AllowDrop="True">
+			<i:Interaction.Behaviors>
+				<behaviors:EventToCommandBehavior Event="DragEnter" Command="{Binding DragEnterCommand}" PassArguments="True"/>
+				<behaviors:EventToCommandBehavior Event="DragOver" Command="{Binding DragOverCommand}" PassArguments="True"/>
+				<behaviors:EventToCommandBehavior Event="Drop" Command="{Binding DropCommand}" PassArguments="True"/>
+				<behaviors:EventToCommandBehavior Event="KeyDown" Command="{Binding KeyDownCommand}" PassArguments="True"/>
+			</i:Interaction.Behaviors>
+			<viewport:CRendererHostControl x:Name="RendererHostControl">
+			</viewport:CRendererHostControl>
+		</Border>
+    </Grid>
+</UserControl>

@@ -5,63 +5,75 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{94BAB26E-C944-44D7-A603-CE974F6642B6}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>KlaxCore</RootNamespace>
     <AssemblyName>KlaxCore</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.D3DCompiler, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.D3DCompiler.4.2.0\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Desktop, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.Desktop.4.2.0\lib\net45\SharpDX.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Diagnostics, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.Diagnostics.2.0.4\lib\net20\SharpDX.Diagnostics.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.Direct3D11.4.2.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.DirectInput, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.DirectInput.4.2.0\lib\net45\SharpDX.DirectInput.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Mathematics, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.Mathematics.4.2.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\NewtonsoftJsonModified\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -71,24 +83,132 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Game.cs" />
-    <Compile Include="Core\ValueEvolution.cs" />
+    <Compile Include="EditorHelper\DragDropHelpers.cs" />
+    <Compile Include="EditorHelper\EditorHelpers.cs" />
+    <Compile Include="Core\Engine.cs" />
+    <Compile Include="Core\Level.cs" />
+    <Compile Include="Core\View\ViewManager.cs" />
+    <Compile Include="Core\World.cs" />
+    <Compile Include="Core\EngineUpdater.cs" />
+    <Compile Include="Core\WorldObject.cs" />
+    <Compile Include="GameFramework\Assets\EntityAsset.cs" />
+    <Compile Include="GameFramework\Assets\LevelAsset.cs" />
+    <Compile Include="GameFramework\Assets\Serializer\EntityAssetConverter.cs" />
+    <Compile Include="GameFramework\Assets\Serializer\EntityContractResolver.cs" />
+    <Compile Include="GameFramework\Assets\Serializer\EntitySerializer.cs" />
+    <Compile Include="GameFramework\Assets\Serializer\RawJsonConverter.cs" />
+    <Compile Include="GameFramework\Camera\CCameraComponent.cs" />
+    <Compile Include="GameFramework\Camera\CDebugCameraEntity.cs" />
+    <Compile Include="GameFramework\Console\GameConsole.cs" />
+    <Compile Include="GameFramework\Editor\ScenePickerEntity.cs" />
+    <Compile Include="GameFramework\Editor\ScenePickingComponent.cs" />
+    <Compile Include="GameFramework\Editor\TransformGizmoComponent.cs" />
+    <Compile Include="GameFramework\Entity.cs" />
+    <Compile Include="GameFramework\EntityComponent.cs" />
+    <Compile Include="GameFramework\GameMaterial.cs" />
+    <Compile Include="GameFramework\Lighting\AmbientLightComponent.cs" />
+    <Compile Include="GameFramework\Lighting\DirectionalLightComponent.cs" />
+    <Compile Include="GameFramework\Lighting\LightComponent.cs" />
+    <Compile Include="GameFramework\Lighting\PointLightComponent.cs" />
+    <Compile Include="GameFramework\Lighting\SpotLightComponent.cs" />
+    <Compile Include="GameFramework\MeshComponent.cs" />
+    <Compile Include="GameFramework\ModelComponent.cs" />
+    <Compile Include="GameFramework\RotationComponent.cs" />
+    <Compile Include="GameFramework\ScriptLibraries\BasicScriptFunctionLibrary.cs" />
+    <Compile Include="GameFramework\ScriptLibraries\ConversionScriptFunctionLibrary.cs" />
+    <Compile Include="GameFramework\ScriptLibraries\DebugScriptFunctionLibrary.cs" />
+    <Compile Include="GameFramework\ScriptLibraries\InputScriptFunctionLibrary.cs" />
+    <Compile Include="GameFramework\ScriptLibraries\MathFunctionLibrary.cs" />
+    <Compile Include="GameFramework\ScriptLibraries\PhysicsScriptFunctionLibrary.cs" />
+    <Compile Include="GameFramework\ScriptLibraries\ScriptWorldFunctionLibrary.cs" />
+    <Compile Include="GameFramework\ScriptLibraries\StringScriptFunctionLibrary.cs" />
+    <Compile Include="GameFramework\UpdateScheduler.cs" />
+    <Compile Include="GameFramework\SceneComponent.cs" />
+    <Compile Include="KlaxScript\CustomFunctionGraph.cs" />
+    <Compile Include="KlaxScript\EventGraph.cs" />
+    <Compile Include="KlaxScript\FunctionGraph.cs" />
+    <Compile Include="KlaxScript\InterfaceFunctionGraph.cs" />
+    <Compile Include="KlaxScript\Interfaces\KlaxScriptInterface.cs" />
+    <Compile Include="KlaxScript\Interfaces\KlaxScriptInterfaceAsset.cs" />
+    <Compile Include="KlaxScript\KlaxScriptCodeGenerator.cs" />
+    <Compile Include="KlaxScript\KlaxScriptEvent.cs" />
+    <Compile Include="KlaxScript\KlaxScriptRegistry.cs" />
+    <Compile Include="KlaxScript\KlaxScriptTypes.cs" />
+    <Compile Include="KlaxScript\Nodes\CastNode.cs" />
+    <Compile Include="KlaxScript\Nodes\ComponentVariableNode.cs" />
+    <Compile Include="KlaxScript\Nodes\ControlFlow.cs" />
+    <Compile Include="KlaxScript\Nodes\EventNode.cs" />
+    <Compile Include="KlaxScript\Nodes\ExecuteCustomFunctionNode.cs" />
+    <Compile Include="KlaxScript\Nodes\ExecuteFunctionNode.cs" />
+    <Compile Include="KlaxScript\Graph.cs" />
+    <Compile Include="KlaxScript\KlaxScriptObject.cs" />
+    <Compile Include="KlaxScript\Nodes\ExecuteInterfaceFunctionNode.cs" />
+    <Compile Include="KlaxScript\Nodes\ForEachLoopNode.cs" />
+    <Compile Include="KlaxScript\Nodes\ForLoopNode.cs" />
+    <Compile Include="KlaxScript\Nodes\FunctionGraphNodes.cs" />
+    <Compile Include="KlaxScript\Nodes\KlaxVariableNode.cs" />
+    <Compile Include="KlaxScript\Nodes\MemberNodes.cs" />
+    <Compile Include="KlaxScript\KlaxVariable.cs" />
+    <Compile Include="KlaxScript\Nodes\Node.cs" />
+    <Compile Include="KlaxScript\Nodes\SelfReferenceNode.cs" />
+    <Compile Include="KlaxScript\Nodes\SwitchNode.cs" />
+    <Compile Include="KlaxScript\ScriptEnv.cs" />
+    <Compile Include="KlaxScript\Serialization\ReflectionTypesJsonConverters.cs" />
+    <Compile Include="KlaxScript\Serialization\ScriptSerializer.cs" />
+    <Compile Include="KlaxScript\Serialization\UseScriptSerializerConverter.cs" />
+    <Compile Include="Physics\Components\BoxColliderComponent.cs" />
+    <Compile Include="Physics\Components\CapsuleColliderComponent.cs" />
+    <Compile Include="Physics\Components\ColliderComponent.cs" />
+    <Compile Include="Physics\Components\ConeColliderComponent.cs" />
+    <Compile Include="Physics\Components\CylinderColliderComponent.cs" />
+    <Compile Include="Physics\Components\StaticModelColliderComponent.cs" />
+    <Compile Include="Physics\Components\SphereColliderComponent.cs" />
+    <Compile Include="Physics\Components\StaticMeshColliderComponent.cs" />
+    <Compile Include="Physics\PhysicsStatics.cs" />
+    <Compile Include="Physics\PhysicsTypes.cs" />
+    <Compile Include="Physics\PhysicsWorld.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="KlaxEngineForm.cs" />
+    <Compile Include="Utility\PerformanceCounter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Shaders\pixelShader.hlsl">
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="EngineResources\DefaultMeshes\DefaultCapsule.obj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Shaders\vertexShader.hlsl">
+    </None>
+    <None Include="EngineResources\DefaultMeshes\DefaultCone.obj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
+    <None Include="EngineResources\DefaultMeshes\DefaultCube.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="EngineResources\DefaultMeshes\DefaultCylinder.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="EngineResources\DefaultMeshes\DefaultSphere.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BepuPhysics\Physics\BEPUphysics.csproj">
+      <Project>{f86dd40b-711f-4693-a3ee-9f04b0f6c5ed}</Project>
+      <Name>BEPUphysics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BepuPhysics\Utilities\BEPUutilities.csproj">
+      <Project>{3ee4c258-63a5-43c4-88f5-3a6e5975f35b}</Project>
+      <Name>BEPUutilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KlaxConfig\KlaxConfig.csproj">
+      <Project>{0d03db57-f78c-4f41-ac74-9cc681e5b7be}</Project>
+      <Name>KlaxConfig</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KlaxIO\KlaxIO.csproj">
+      <Project>{8b13db51-88d9-46fc-aacb-a0698b9921bb}</Project>
+      <Name>KlaxIO</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KlaxMath\KlaxMath.csproj">
       <Project>{11eea24a-8356-46d1-9642-f895491a7f6d}</Project>
       <Name>KlaxMath</Name>
@@ -97,6 +217,46 @@
       <Project>{71e9ed84-3374-452d-8bfe-e77393203955}</Project>
       <Name>KlaxRenderer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KlaxShared\KlaxShared.csproj">
+      <Project>{54221683-92BC-45B2-8D5E-C61277BE0A1A}</Project>
+      <Name>KlaxShared</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AssimpNet">
+      <Version>4.1.0-rc2</Version>
+    </PackageReference>
+    <PackageReference Include="ImGui.NET">
+      <Version>1.65.0-beta1</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.D3DCompiler">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Desktop">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Diagnostics">
+      <Version>2.0.4</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Direct2D1">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Direct3D11">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.DirectInput">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Mathematics">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="TeximpNet">
+      <Version>1.3.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /y "$(SolutionDir)native\$(PlatformName)\*.dll" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

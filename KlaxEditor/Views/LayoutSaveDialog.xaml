@@ -1,0 +1,38 @@
+﻿<Window x:Class="KlaxEditor.Views.LayoutSaveDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KlaxEditor.Views"
+        xmlns:controls="clr-namespace:KlaxEditor.UserControls"
+        xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
+        mc:Ignorable="d"
+        Title="Layout" Height="120" Width="300"
+        Background="Transparent"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <avalonDock:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Window.Resources>
+    
+    <Border CornerRadius="0, 0, 7, 7" Padding="4" Background="#191919">
+        <Grid Background="#2D2D2D">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="45" />
+            </Grid.RowDefinitions>
+
+            <controls:IntegratedTitleBar CanMaximize="False" CanMinimize="False"></controls:IntegratedTitleBar>
+            <TextBox Name="LayoutNameBox" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="230" Height="25" Style="{StaticResource InputElementTextBox}">
+            </TextBox>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
+                <Button Style="{StaticResource DialogWindowButton}" Click="Button_Click" Content="Save Layout" Height="30" MinWidth="100" />
+                <Button Style="{StaticResource DialogWindowButton}" Click="Button_Click_1" Content="Cancel" Height="30" MinWidth="100" Margin="30, 0, 0, 0" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

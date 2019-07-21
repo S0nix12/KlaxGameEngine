@@ -1,0 +1,214 @@
+﻿<UserControl x:Class="KlaxEditor.Views.Inspector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:be="clr-namespace:KlaxEditor.Behaviors"
+             xmlns:local="clr-namespace:KlaxEditor.Views"
+             xmlns:usercontrols="clr-namespace:KlaxEditor.UserControls"
+             xmlns:inspectorControls="clr-namespace:KlaxEditor.UserControls.InspectorControls"
+             mc:Ignorable="d" 
+             Name="InspectorControl"
+             d:DesignHeight="850" d:DesignWidth="475">
+
+    <UserControl.Resources>
+        <Thickness x:Key="InspectorElementMargin">0,4,0,0</Thickness>
+
+        <Style x:Key="InvisibleListViewItem" TargetType="{x:Type ListViewItem}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Padding" Value="4,1"/>
+            <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="AddComponentEntryItem" TargetType="{x:Type ListViewItem}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Padding" Value="4,1"/>
+            <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="Bd" Value="{StaticResource LightGray}"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Focusable="True" Name="MainGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="24" MaxHeight="24" />
+                <RowDefinition Height="50" MaxHeight="50" />
+                <RowDefinition MinHeight="25" Height="130" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <StackPanel Margin="10, 5, 10, 0" Orientation="Horizontal" Height="20" Grid.Row="0">
+                <TextBox Style="{StaticResource InputElementTextBox}" MinWidth="200" Name="EntityNameBox" GotFocus="EntityNameBox_GotFocus" LostFocus="EntityNameBox_LostFocus" PreviewKeyDown="EntityNameBox_PreviewKeyDown" Text="{Binding EntityName, Mode=OneWay}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="10, 0, 10, 0" Grid.Row="1">
+                <Button HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" Command="{Binding ToggleAddComponentMenuCommand}" Style="{DynamicResource AddComponentButtonStyle}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="+Add Component" FontSize="14" Foreground="White">
+                            <TextBlock.Effect>
+                                <DropShadowEffect BlurRadius="2" Opacity="1" ShadowDepth="2" />
+                            </TextBlock.Effect>
+                        </TextBlock>
+                        <Path Visibility="{Binding AddComponentMenuOpen, Converter={StaticResource BoolToVisibility_TrueCollapsed_FalseVisible}}" x:Name="OpenAddComponentArrow" Margin="6, 0" VerticalAlignment="Center" Fill="White" Data="M0,3 L12,3 L6,9 z">
+                            <Path.Effect>
+                                <DropShadowEffect BlurRadius="2" Opacity="1" ShadowDepth="2" />
+                            </Path.Effect>
+                        </Path>
+                        <Path Visibility="{Binding AddComponentMenuOpen, Converter={StaticResource BoolToVisibility_TrueVisible_FalseCollapsed}}" x:Name="CloseAddComponentArrow" Margin="6, 0" VerticalAlignment="Center" Fill="White" Data="M6,3 L12,9 L0,9 z">
+                            <Path.Effect>
+                                <DropShadowEffect BlurRadius="2" Opacity="1" ShadowDepth="2" />
+                            </Path.Effect>
+                        </Path>
+                    </StackPanel>
+                </Button>
+
+                <Button Margin="10, 0, 0, 0" HorizontalAlignment="Stretch" Height="30" Width="30" VerticalAlignment="Center" Command="{Binding ToggleEntityCommandsMenuCommand}" Style="{DynamicResource EntityCommandsButtonStyle}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Image Source="pack://application:,,,/Resources/Images/Windows/fa_cog.png" Width="16" Height="16">
+                            <Image.Effect>
+                                <DropShadowEffect BlurRadius="2" Opacity="1" ShadowDepth="2" />
+                            </Image.Effect>
+                        </Image>
+                    </StackPanel>
+                </Button>
+
+                <Popup Margin="10, 10, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="220" Height="Auto" IsOpen="{Binding AddComponentMenuOpen}" StaysOpen="False">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                        <ListView ScrollViewer.CanContentScroll="False" ItemsSource="{Binding AddComponentMenuCategories}" Background="{StaticResource DarkGray}" ItemContainerStyle="{StaticResource InvisibleListViewItem}" MaxHeight="400">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Name}" FontSize="10" Foreground="LightGray" />
+                                        <ListView ItemContainerStyle="{StaticResource AddComponentEntryItem}" ItemsSource="{Binding ComponentTypes}" Background="{StaticResource DarkGray}" BorderThickness="0">
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Button Background="Transparent" Command="{Binding DataContext.AddComponentCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView},AncestorLevel=2}}" CommandParameter="{Binding Type}" Padding="0" BorderThickness="0">
+                                                        <TextBlock Text="{Binding Name}" FontSize="12" />
+                                                    </Button>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollViewer>
+                </Popup>
+
+                <Popup Margin="10, 10, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="220" Height="Auto" IsOpen="{Binding EntityCommandsMenuOpen}" StaysOpen="False">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                        <ListView ScrollViewer.CanContentScroll="False" ItemsSource="{Binding EntityCommands}" Background="{StaticResource DarkGray}" ItemContainerStyle="{StaticResource AddComponentEntryItem}" MaxHeight="400">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Background="Transparent" Command="{Binding Command}" Padding="0" BorderThickness="0">
+                                        <TextBlock Text="{Binding Name}" FontSize="12" />
+                                    </Button>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollViewer>
+                </Popup>
+            </StackPanel>
+
+            <Border Margin="8" Grid.Row="2" CornerRadius="3" BorderThickness="0" Background="#3E3E3E">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <StackPanel Orientation="Vertical">
+                        <TreeView ItemContainerStyle="{StaticResource StretchedTreeViewItemStyle}" HorizontalContentAlignment="Left" ScrollViewer.CanContentScroll="False" Name="EntityDisplay" ItemsSource="{Binding EntityInfo}" Background="Transparent" BorderThickness="0">
+                            <TreeView.ItemTemplate>
+                                <HierarchicalDataTemplate>
+                                    <Border HorizontalAlignment="Stretch">
+                                        <TextBlock HorizontalAlignment="Left" Text="{Binding Name}" />
+                                    </Border>
+                                </HierarchicalDataTemplate>
+                            </TreeView.ItemTemplate>
+                        </TreeView>
+                        <Separator Margin="8, 2, 8, 2" />
+                        <TreeView  ItemContainerStyle="{StaticResource StretchedTreeViewItemStyle}" HorizontalContentAlignment="Stretch" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.CanContentScroll="False" Name="SceneComponentList" ItemsSource="{Binding SceneComponents}" Background="Transparent" BorderThickness="0" SelectedItemChanged="TreeView_SelectedItemChanged" PreviewMouseMove="OnPreviewMouseMove">
+                            <TreeView.ItemTemplate>
+                                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                    <Border HorizontalAlignment="Stretch" x:Name="SceneComponentEntry" PreviewMouseLeftButtonDown="SceneComponentEntry_PreviewMouseLeftButtonDown" AllowDrop="True">
+                                        <i:Interaction.Behaviors>
+                                            <be:EventToCommandBehavior Event="DragEnter" Command="{Binding DragEnterCommand}" PassArguments="True" />
+                                            <be:EventToCommandBehavior Event="DragOver" Command="{Binding DragOverCommand}" PassArguments="True" />
+                                            <be:EventToCommandBehavior Event="Drop" Command="{Binding DropCommand}" PassArguments="True" />
+                                        </i:Interaction.Behaviors>
+                                        <TextBlock AllowDrop="True" Text="{Binding Name}">
+                                            <TextBlock.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Make Root" Command="{Binding MakeRootCommand}" />
+                                                    <MenuItem Header="Delete" Command="{Binding DeleteComponentCommand}" />
+                                                </ContextMenu>
+                                            </TextBlock.ContextMenu>
+                                        </TextBlock>
+                                    </Border>
+                                </HierarchicalDataTemplate>
+                            </TreeView.ItemTemplate>
+                        </TreeView>
+                        <Separator Margin="8, 2, 8, 2" />
+                        <TreeView ItemContainerStyle="{StaticResource StretchedTreeViewItemStyle}" HorizontalContentAlignment="Stretch"  VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.CanContentScroll="False" Name="EntityComponentList" ItemsSource="{Binding EntityComponents}" Background="Transparent" BorderThickness="0" SelectedItemChanged="TreeView_SelectedItemChanged">
+                            <TreeView.ItemTemplate>
+                                <HierarchicalDataTemplate>
+                                    <Border HorizontalAlignment="Stretch">
+                                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Left" >
+                                            <TextBlock.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Delete" Command="{Binding DeleteComponentCommand}" />
+                                                </ContextMenu>
+                                            </TextBlock.ContextMenu>
+                                        </TextBlock>
+                                    </Border>
+                                </HierarchicalDataTemplate>
+                            </TreeView.ItemTemplate>
+                        </TreeView>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+            <GridSplitter Grid.Row="2" Height="3"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Bottom"
+                  Background="#3E3E3E"
+                  Margin="5, 0, 5, 0"/>
+
+            <inspectorControls:PropertyInspector x:Name="PropertyInspector" Grid.Row="3" Margin="8, 8, 8, 0" />
+
+        </Grid>
+    </ScrollViewer>
+</UserControl>

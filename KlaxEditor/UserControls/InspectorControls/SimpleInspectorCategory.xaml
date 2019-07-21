@@ -1,0 +1,20 @@
+﻿<local:CBaseInspectorCategory x:Class="KlaxEditor.UserControls.InspectorControls.SimpleInspectorCategory"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:KlaxEditor.UserControls.InspectorControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Name="PropertyGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Name="LeftColumn" Width="50" MinWidth="20" />
+            <ColumnDefinition Width="3" />
+            <ColumnDefinition Width="6" MaxWidth="6" MinWidth="6" />
+            <ColumnDefinition Name="RightColumn" Width="*" MinWidth="20" />
+        </Grid.ColumnDefinitions>
+
+        <GridSplitter Background="{StaticResource InspectorPropertySplitterColor}" Grid.Column="1" Grid.RowSpan="10000" Width="3" HorizontalAlignment="Stretch" DragDelta="GridSplitter_DragDelta" />
+
+    </Grid>
+</local:CBaseInspectorCategory>

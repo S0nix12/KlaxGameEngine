@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="KlaxEditor.Views.MaterialEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewport="clr-namespace:WpfSharpDxControl"
+             xmlns:local="clr-namespace:KlaxEditor.Views"
+             xmlns:inspectorControls="clr-namespace:KlaxEditor.UserControls.InspectorControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="500">
+    <Grid>
+		<Grid.RowDefinitions>
+			<!--<RowDefinition Height="200"/>
+			<RowDefinition Height="Auto" />-->
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<!--<viewport:CRendererHostControl x:Name="PreviewViewport" Grid.Row="0" />-->
+	    <!--<GridSplitter Grid.Row="1" Height="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="3" Background="{StaticResource InspectorPropertySplitterColor}"/>-->
+		<Border Grid.Row="0" Padding="4,2" CornerRadius="2" Margin="0,2">
+			<TextBlock Text="{Binding MaterialName}" FontSize="17" />
+	    </Border>
+	    <inspectorControls:PropertyInspector Grid.Row="1" x:Name="PropertyInspector" DispatchSetter="False" />		
+	</Grid>
+</UserControl>

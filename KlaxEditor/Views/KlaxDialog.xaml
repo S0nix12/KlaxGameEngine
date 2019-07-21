@@ -1,0 +1,40 @@
+﻿<Window x:Class="KlaxEditor.Views.KlaxDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KlaxEditor.Views"
+        xmlns:controls="clr-namespace:KlaxEditor.UserControls"
+        xmlns:avalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
+        mc:Ignorable="d"
+        Title="KlaxDialog" Height="200" Width="400"
+        Background="Transparent"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <avalonDock:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Window.Resources>
+    <Border CornerRadius="0, 0, 7, 7" Padding="4" Background="#191919">
+        <Grid Background="#2D2D2D">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+            
+            <controls:IntegratedTitleBar CanMaximize="False" CanMinimize="False"></controls:IntegratedTitleBar>
+            <DockPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto">
+                <Image Source="{Binding Image}" DockPanel.Dock="Left" MaxWidth="64" MaxHeight="64" Margin="0, 0, 25, 0"/>
+                <TextBlock Text="{Binding Message}" DockPanel.Dock="Right" Background="Transparent" FontSize="14" VerticalAlignment="Center" Foreground="White" />
+            </DockPanel>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
+                <Button Style="{StaticResource DialogWindowButton}" Command="{Binding PrimaryButtonClicked}" Content="{Binding PrimaryButtonText}" Height="30" MinWidth="100" />
+                <Button Style="{StaticResource DialogWindowButton}" Command="{Binding SecondaryButtonClicked}" Content="{Binding SecondaryButtonText}" Height="30" MinWidth="100" Margin="30, 0, 0, 0" Visibility="{Binding SecondaryButtonVisibility, Converter={StaticResource BoolToVisibilityConverter}}" />
+                <Button Style="{StaticResource DialogWindowButton}" Command="{Binding TertiaryButtonClicked}" Content="{Binding TertiaryButtonText}" Height="30" MinWidth="100" Margin="30, 0, 0, 0" Visibility="{Binding TertiaryButtonVisibility, Converter={StaticResource BoolToVisibilityConverter}}" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

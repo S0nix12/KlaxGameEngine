@@ -1,0 +1,127 @@
+﻿<UserControl x:Class="KlaxEditor.Views.KlaxScript.ScriptNodeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+			 xmlns:converters="clr-namespace:KlaxEditor.Converters"
+             xmlns:be="clr-namespace:KlaxEditor.Behaviors"
+             xmlns:local="clr-namespace:KlaxEditor.Views.KlaxScript"
+             xmlns:vm="clr-namespace:KlaxEditor.ViewModels.KlaxScript"
+             xmlns:inspectorcontrols="clr-namespace:KlaxEditor.UserControls.InspectorControls"
+             xmlns:selectors="clr-namespace:KlaxEditor.Selectors"
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="250"
+             d:DataContext="">
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter FalseValue="Collapsed" TrueValue="Visible" x:Key="AddPinButtonVisibilityConverter" />
+
+        <Style TargetType="{x:Type Polygon}" x:Key="ExecutionPinPoly">
+            <Setter Property="StrokeThickness" Value="1.5" />
+            <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TranslateTransform X="0" Y="2"></TranslateTransform>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="RenderTransform" >
+                        <Setter.Value>
+                            <TransformGroup>
+                                <TranslateTransform X="0" Y="2"></TranslateTransform>
+                                <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+                            </TransformGroup>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <DataTemplate x:Key="InExecutionPinTemplate" DataType="{x:Type vm:CExecutionPinViewModel}">
+            <Border Style="{StaticResource HoverBorder}" HorizontalAlignment="Left">
+                <i:Interaction.Behaviors>
+                    <be:EventToCommandBehavior Event="MouseDown" Command="{Binding MouseDownCommand}" PassArguments="True" />
+                </i:Interaction.Behaviors>
+                <StackPanel Orientation="Horizontal">
+                    <local:PinControl ConnectionPoint="{Binding ConnectionPoint, Mode=OneWayToSource}" Margin="0,0,0,2" ToolTip="{Binding Tooltip}">
+                        <Polygon Style="{StaticResource ExecutionPinPoly}" Points="0,0 0,14 8,7" Stroke="{Binding PinOuterColor}" VerticalAlignment="Center" Fill="{Binding PinInnerColor}" />
+                    </local:PinControl>
+                    <TextBlock Margin="5,0" VerticalAlignment="Center" Text="{Binding Name}" Visibility="{Binding DataContext.Lod, Converter={StaticResource LodToVisibilityConverter}, ConverterParameter=3, RelativeSource={RelativeSource AncestorType=local:NodeGraphView}}"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="OutExecutionPinTemplate" DataType="{x:Type vm:CExecutionPinViewModel}">
+            <Border Style="{StaticResource HoverBorder}" HorizontalAlignment="Right">
+                <i:Interaction.Behaviors>
+                    <be:EventToCommandBehavior Event="MouseDown" Command="{Binding MouseDownCommand}" PassArguments="True" />
+                </i:Interaction.Behaviors>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="5,0" VerticalAlignment="Center" Text="{Binding Name}" Visibility="{Binding DataContext.Lod, Converter={StaticResource LodToVisibilityConverter}, ConverterParameter=3, RelativeSource={RelativeSource AncestorType=local:NodeGraphView}}"/>
+                    <local:PinControl ConnectionPoint="{Binding ConnectionPoint, Mode=OneWayToSource}" Margin="0,0,0,2" ToolTip="{Binding Tooltip}">
+                        <Polygon Style="{StaticResource ExecutionPinPoly}" Points="0,0 0,14 8,7" Stroke="{Binding PinOuterColor}" VerticalAlignment="Center" Fill="{Binding PinInnerColor}" />
+                    </local:PinControl>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="SwitchOutExecutionPinTemplate" DataType="{x:Type vm:CSwitchExecutionPinViewModel}">
+            <Border Style="{StaticResource HoverBorder}" HorizontalAlignment="Right">
+                <i:Interaction.Behaviors>
+                    <be:EventToCommandBehavior Event="MouseDown" Command="{Binding MouseDownCommand}" PassArguments="True" />
+                </i:Interaction.Behaviors>
+                <StackPanel Orientation="Horizontal">
+                    <inspectorcontrols:StandaloneInspectorControl MinWidth="50" InspectorControlType="{Binding ControlType}" Value="{Binding ControlValue, Mode=TwoWay}" />
+                    <TextBlock Margin="5,0" VerticalAlignment="Center" Text="{Binding Name}" Visibility="{Binding DataContext.Lod, Converter={StaticResource LodToVisibilityConverter}, ConverterParameter=3, RelativeSource={RelativeSource AncestorType=local:NodeGraphView}}"/>
+                    <local:PinControl ConnectionPoint="{Binding ConnectionPoint, Mode=OneWayToSource}" Margin="0,0,0,2" ToolTip="{Binding Tooltip}">
+                        <Polygon Style="{StaticResource ExecutionPinPoly}" Points="0,0 0,14 8,7" Stroke="{Binding PinOuterColor}" VerticalAlignment="Center" Fill="{Binding PinInnerColor}" />
+                    </local:PinControl>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+    <UserControl.CacheMode>
+		<BitmapCache EnableClearType="False" RenderAtScale="{Binding DataContext.GraphScaleFactor, RelativeSource={RelativeSource AncestorType=local:NodeGraphView}}" SnapsToDevicePixels="True" />
+	</UserControl.CacheMode>
+
+    <Grid MouseMove="OnMouseMove" Cursor="SizeAll" MouseLeftButtonDown="NodeLeftMouseDown">
+        <i:Interaction.Behaviors>
+            <be:EventToCommandBehavior Event="MouseDown" Command="{Binding MouseDownCommand}" PassArguments="True" />
+        </i:Interaction.Behaviors>
+        <Border Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityConverter}}" BorderThickness="2" BorderBrush="{StaticResource ListItem.SelectedActive.Border}" Background="{StaticResource ListItem.SelectedActive.Background}" CornerRadius="10"/>
+        <StackPanel Margin="2" VerticalAlignment="Top">
+            <Border Background="#CC8B0000" CornerRadius="10,10,0,0">
+                <Grid HorizontalAlignment="Stretch" Margin="2,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ItemsControl Grid.Column="0" VerticalAlignment="Center" ItemsSource="{Binding InExecutionPins}" ItemTemplate="{StaticResource InExecutionPinTemplate}" Cursor="Arrow"/>
+                    <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0,5,0"/>
+                    <ItemsControl Grid.Column="2" VerticalAlignment="Center" ItemsSource="{Binding OutExecutionPins}" Cursor="Arrow">
+                        <ItemsControl.ItemTemplateSelector>
+                            <selectors:CExecutionPinTemplateSelector DefaultTemplate="{StaticResource OutExecutionPinTemplate}" SwitchTemplate="{StaticResource SwitchOutExecutionPinTemplate}" />
+                        </ItemsControl.ItemTemplateSelector>
+                    </ItemsControl>
+                </Grid>
+            </Border>
+            <Border Background="{StaticResource LightGray80Alpha}" CornerRadius="0,0,10,10" MinHeight="20">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" Grid.Column="0">
+                        <ItemsControl ItemsSource="{Binding InputPins}" Cursor="Arrow" ItemTemplate="{StaticResource InputPinTemplate}" />
+                        <Button HorizontalAlignment="Left" Style="{StaticResource AddPinButtonStyle}" Visibility="{Binding CanAddInputPins, Converter={StaticResource AddPinButtonVisibilityConverter}}" Command="{Binding AddInputPinCommand}" Content="Add Input" />
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Grid.Column="1">
+                        <ItemsControl HorizontalAlignment="Right" Grid.Column="1" ItemTemplate="{StaticResource OutputPinTemplate}" ItemsSource="{Binding OutputPins}" Cursor="Arrow">
+                        </ItemsControl>
+                        <Button HorizontalAlignment="Right" Style="{StaticResource AddPinButtonStyle}" Visibility="{Binding CanAddOutputPins, Converter={StaticResource AddPinButtonVisibilityConverter}}" Command="{Binding AddOutputPinCommand}" Content="Add Output" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </Grid>
+</UserControl>

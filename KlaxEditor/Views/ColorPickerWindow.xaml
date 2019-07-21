@@ -1,0 +1,42 @@
+﻿<Window x:Class="KlaxEditor.Views.ColorPickerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:controls="clr-namespace:KlaxEditor.UserControls"
+        xmlns:conv="clr-namespace:Xceed.Wpf.Toolkit.Core.Converters;assembly=Xceed.Wpf.Toolkit"
+        xmlns:conv2="clr-namespace:Xceed.Wpf"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        Title="ColorPickerWindow" Height="360" Width="280"
+        ResizeMode="NoResize"
+        WindowStartupLocation="Manual"
+        Background="Transparent"
+        WindowStyle="None"
+        AllowsTransparency="True">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type xceed:ByteUpDown}">
+            <Setter Property="Foreground" Value="White"></Setter>
+        </Style>
+        <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="White"/>
+    </Window.Resources>
+
+    <Border CornerRadius="0, 0, 7, 7" Padding="4" Background="#191919">
+        <Grid Background="#2D2D2D">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25" />
+                <RowDefinition Height="90*"></RowDefinition>
+                <RowDefinition Height="15*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <controls:IntegratedTitleBar CanMaximize="False" CanMinimize="False"></controls:IntegratedTitleBar>
+            <xceed:ColorCanvas Margin="0, 8, 0, 0" BorderThickness="0" Foreground="White" Background="Transparent" Grid.Row="1" Name="ColorPicker" SelectedColorChanged="ColorPicker_SelectedColorChanged" Width="250">
+            </xceed:ColorCanvas>
+
+            <DockPanel Grid.Row="2" HorizontalAlignment="Center" Width="220" VerticalAlignment="Top">
+                <Button DockPanel.Dock="Left" Style="{StaticResource DialogWindowButton}" Content="Apply" Click="ApplyButton_Click" Height="30" MinWidth="100" MaxWidth="100" />
+                <Button DockPanel.Dock="Right" Style="{StaticResource DialogWindowButton}" Content="Cancel" Click="CancelButton_Click" Height="30" MinWidth="100" MaxWidth="100" HorizontalAlignment="Right" />
+            </DockPanel>
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+    <PackageLicenseUrl>https://github.com/bepu/bepuphysics1/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/bepu/bepuphysics1</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/bepu/bepuphysics1/master/Documentation/images/readme/bepuphysicslogo256.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/bepu/bepuphysics1.git</RepositoryUrl>
+    <Description>Real time physics simulation library utilities.</Description>
+    <Version>1.5.1</Version>
+    <Authors>Ross Nordby</Authors>
+    <Company>Bepu Entertainment LLC</Company>
+    <Copyright>© Bepu Entertainment LLC</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+</Project>

@@ -8,7 +8,7 @@ using KlaxMath;
 
 namespace KlaxRenderer.Camera
 {
-    class CBaseCamera : ICamera
+    public class CBaseCamera : ICamera
     {
         public override void UpdateViewParams()
         {
@@ -16,25 +16,55 @@ namespace KlaxRenderer.Camera
 
             // Create our ViewMatrix from our Transform
             // TODO think about a method to use dirty flags so we only recreate this when the transform changes
-            ViewMatrix = Matrix.LookAtLH(Transform.Position, Transform.Forward, Transform.Up);
+            //ViewMatrix = Matrix.LookAtLH(Transform.Position, Transform.Position + Transform.Forward, Transform.Up);
+	        ViewMatrix = Matrix.Invert(Transform.WorldMatrix);
 
-            // Set Projection Matrix
-            if(IsPerspective)
+			// Set Projection Matrix
+			if (IsPerspective)
             {
                 ProjectionMatrix = Matrix.PerspectiveFovLH(FieldOfView, AspectRatio, ScreenNear, ScreenFar);
-            }
+			}
             else
             {
                 ProjectionMatrix = Matrix.OrthoLH(ScreenWidth, ScreenHeight, ScreenNear, ScreenFar);
             }
         }
 
-        /****************** Properties *******************/
-        public float FieldOfView
-        { get; set; } = SharpDX.MathUtil.Pi / 4.0f;
+	    public override Vector3 WorldToScreenPoint(Vector3 worldPosition)
+	    {
+		    return Vector3.Project(worldPosition, 0.0f, 0.0f, ScreenWidth, ScreenHeight, ScreenNear, ScreenFar, ViewMatrix * ProjectionMatrix);			
+	    }
+
+	    public override Vector3 ScreenToWorldPointAbs(Vector3 screenPosition)
+	    {
+		    return Vector3.Unproject(screenPosition, 0.0f, 0.0f, ScreenWidth, ScreenHeight, ScreenNear, ScreenFar, ViewMatrix * ProjectionMatrix);
+	    }
+
+	    public override Vector3 ScreenToWorldPointRel(Vector3 screenPosition)
+	    {
+		    screenPosition.X *= ScreenWidth;
+		    screenPosition.Y *= ScreenHeight;
+		    return Vector3.Unproject(screenPosition, 0.0f, 0.0f, ScreenWidth, ScreenHeight, ScreenNear, ScreenFar, ViewMatrix * ProjectionMatrix);
+	    }
+
+		public override float GetScreenWidth()
+		{
+			return ScreenWidth;
+		}
+
+		public override float GetScreenHeight()
+		{
+			return ScreenHeight;
+		}
+
+		/****************** Properties *******************/
+		public float FieldOfView
+        { get; set; } = MathUtil.Pi / 4.0f;
 
         public float AspectRatio
-        { get; set; } = 16.0f / 9.0f;
+        {
+	        get { return ScreenWidth / ScreenHeight; }
+        }
 
         public float ScreenNear
         { get; set; } = 0.2f;

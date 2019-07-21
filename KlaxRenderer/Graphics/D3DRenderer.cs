@@ -1,135 +1,102 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX.Windows;
 using SharpDX.DXGI;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX;
-using SharpDX.D3DCompiler;
 
 using Device = SharpDX.Direct3D11.Device;
-using Buffer = SharpDX.Direct3D11.Buffer;
+using KlaxShared.Attributes;
+using KlaxRenderer.Graphics.UI;
+using KlaxConfig;
+using KlaxRenderer.Scene;
 
 namespace KlaxRenderer.Graphics
 {
     class CD3DRenderer : IDisposable
     {
-        public delegate void DrawCallback(DeviceContext deviceContext);
+        public bool Wireframe { get; set; }
+		public int MSAASampleCount { get; set; } = 4;
+        public int SleepMilliseconds { get; private set; }
 
         public CD3DRenderer()
-        {}
-
-        public void Init(string windowName, int width, int height)
         {
-            m_width = width;
-            m_height = height;
-            m_renderForm = new RenderForm(windowName);
-            m_renderForm.ClientSize = new Size(m_width, m_height);
+            Configuration.EnableObjectTracking = false;
+            Configuration.EnableTrackingReleaseOnFinalizer = true;
+            ComObject.LogMemoryLeakWarning = (warning) => System.Diagnostics.Trace.WriteLine(warning);
 
-            Init();
+            m_uiRenderer = new ImGuiRenderer();
         }
 
-        public void Init(RenderForm window)
+        public void Init()
         {
-            m_renderForm = window;
-            m_width = window.ClientSize.Width;
-            m_height = window.ClientSize.Height;
-
-            Init();
+			InitializeDevice();
+            m_uiRenderer.Init(m_d3dDevice, m_d3dDeviceContext, 0, 0, 0, 0);
         }
 
-        private void Init()
+		public void BeginFrame(float deltaTime)
+		{
+			m_currentFrameTime = deltaTime;
+		}
+
+		public void SetActiveWindow(CWindowRenderer window)
+		{
+			ActiveWindow = window;
+
+			m_uiRenderer.SetContext(window.UIContext);
+			m_uiRenderer.Resize(ActiveWindow.Width, ActiveWindow.Height, ActiveWindow.Left, ActiveWindow.Top);
+			m_uiRenderer.BeginRender(m_currentFrameTime);
+
+			m_d3dDeviceContext.OutputMerger.SetDepthStencilState(ActiveWindow.DepthStencilState);
+			m_d3dDeviceContext.OutputMerger.SetRenderTargets(ActiveWindow.DepthStencilView, ActiveWindow.RenderTargetView);
+			m_d3dDeviceContext.Rasterizer.State = ActiveWindow.RasterizerState;
+			m_d3dDeviceContext.Rasterizer.SetViewport(ActiveWindow.Viewport);
+			m_d3dDeviceContext.ClearRenderTargetView(ActiveWindow.RenderTargetView, ClearColor);
+			m_d3dDeviceContext.ClearDepthStencilView(ActiveWindow.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0xFF);
+		}
+		public void PresentActiveWindow()
+		{
+			m_uiRenderer.EndRender();
+			ActiveWindow.Render();
+		}
+
+		public void EndFrame()
+		{
+			m_uiRenderer.EndFrame();
+		}
+
+		public void Dispose()
         {
-            InitializeDeviceResources();
-        }
-        
-        public void Dispose()
-        {
-            m_renderForm.Dispose();
-            m_swapChain.Dispose();
             m_d3dDevice.Dispose();
             m_d3dDeviceContext.Dispose();
-            m_renderTargetView.Dispose();
-
+            m_uiRenderer.Dispose();
         }
 
-        public void Run(DrawCallback inDrawCallback)
-        {
-            m_drawCallback = inDrawCallback;
-            RenderLoop.Run(m_renderForm, RenderCallback);
-        }
+		private void InitializeDevice()
+		{
+			m_d3dDevice = new Device(DriverType.Hardware, DeviceCreationFlags.BgraSupport | DeviceCreationFlags.Debug);
+			m_d3dDeviceContext = m_d3dDevice.ImmediateContext;
+		}
 
-        private void RenderCallback()
-        {
-            BeginRender();
-            m_drawCallback(m_d3dDeviceContext);
-            System.Threading.Thread.Sleep(30); // Work
-            EndRender();
-        }
+		public static SharpDX.Color ClearColor
+		{ get; set; } = new SharpDX.Color(0, 0, 0);
 
-        private void InitializeDeviceResources()
-        {
-            ModeDescription backBufferDesc = new ModeDescription(m_width, m_height, new Rational(60, 1), Format.R8G8B8A8_UNorm);                        
-            SwapChainDescription swapChainDesc = new SwapChainDescription()
-            {
-                ModeDescription = backBufferDesc,
-                SampleDescription = new SampleDescription(1, 0),
-                Usage = Usage.RenderTargetOutput,
-                BufferCount = 1,
-                OutputHandle = m_renderForm.Handle,
-                IsWindowed = true
-            };
+		[CVar()]
+        public static int EnableVsync
+        { get; set; } = 0;
 
-            Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.None, swapChainDesc, out m_d3dDevice, out m_swapChain);
-            m_d3dDeviceContext = m_d3dDevice.ImmediateContext;
-
-            using (Texture2D backBuffer = m_swapChain.GetBackBuffer<Texture2D>(0))
-            {
-                m_renderTargetView = new RenderTargetView(m_d3dDevice, backBuffer);
-            }
-
-            m_viewport = new Viewport(0, 0, m_width, m_height);
-            m_d3dDeviceContext.Rasterizer.SetViewport(m_viewport);
-        }
-
-        private void BeginRender()
-        {
-            m_d3dDeviceContext.OutputMerger.SetRenderTargets(m_renderTargetView);
-            m_d3dDeviceContext.ClearRenderTargetView(m_renderTargetView, ClearColor);            
-        }
-
-        private void EndRender()
-        {
-            m_swapChain.Present(EnableVsync ? 1 : 0, PresentFlags.None);
-        }
-
-        public SharpDX.Color ClearColor
-        { get; set; } = new SharpDX.Color(255, 0, 0);
-
-        public bool EnableVsync
-        { get; set; } = true;
-
-        public Device D3DDevie
+        public Device D3DDevice
         { get { return m_d3dDevice; } }
 
         public DeviceContext D3DDeviceContext
         { get { return m_d3dDeviceContext; } }
 
-        private RenderForm m_renderForm;
+		public ImGuiRenderer UIRenderer
+		{ get { return m_uiRenderer;} }
 
-        private int m_width;
-        private int m_height;
-
+		public CWindowRenderer ActiveWindow { get; private set; }
         private Device m_d3dDevice;
         private DeviceContext m_d3dDeviceContext;
-        private SwapChain m_swapChain;
-        private RenderTargetView m_renderTargetView;
-        private DrawCallback m_drawCallback;
-
-        private Viewport m_viewport;
-    }
+        private ImGuiRenderer m_uiRenderer;
+		private float m_currentFrameTime;
+	}
 }

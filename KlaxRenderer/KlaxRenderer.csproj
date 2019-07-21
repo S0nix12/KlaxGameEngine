@@ -11,60 +11,62 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.D3DCompiler, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.D3DCompiler.4.2.0\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Desktop, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.Desktop.4.2.0\lib\net45\SharpDX.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Diagnostics, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.Diagnostics.2.0.4\lib\net20\SharpDX.Diagnostics.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.Direct3D11.4.2.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.DirectInput, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.DirectInput.4.2.0\lib\net45\SharpDX.DirectInput.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Mathematics, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\KlaxEngine\packages\SharpDX.Mathematics.4.2.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -72,34 +74,355 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera\BaseCamera.cs" />
     <Compile Include="Camera\CameraManager.cs" />
+    <Compile Include="Camera\CameraShaderBuffer.cs" />
+    <Compile Include="Camera\DebugCamera.cs" />
     <Compile Include="Camera\ICamera.cs" />
-    <Compile Include="Graphics\IShader.cs" />
-    <Compile Include="Graphics\Mesh.cs" />
+    <Compile Include="Debug\DebugLineCommandList.cs" />
+    <Compile Include="Debug\DebugLineShader.cs" />
+    <Compile Include="Debug\DebugTextRenderer.cs" />
+    <Compile Include="Debug\Primitives\DebugCone.cs" />
+    <Compile Include="Debug\Primitives\DebugHemisphere.cs" />
+    <Compile Include="Debug\Primitives\DebugPrimitiveMap.cs" />
+    <Compile Include="Debug\Primitives\DebugCube.cs" />
+    <Compile Include="Debug\Primitives\DebugPyramid.cs" />
+    <Compile Include="Debug\Primitives\DebugSphere.cs" />
+    <Compile Include="Debug\Primitives\DebugCylinder.cs" />
+    <Compile Include="Debug\DebugDrawCommandList.cs" />
+    <Compile Include="Debug\DebugObjectShader.cs" />
+    <Compile Include="Debug\Primitives\DebugDrawPrimitive.cs" />
+    <Compile Include="Debug\DebugRenderer.cs" />
+    <Compile Include="Graphics\RenderSurfaces\HWNDHostSurface.cs" />
+    <Compile Include="Graphics\RenderSurfaces\IRenderSurface.cs" />
+    <Compile Include="Graphics\Model\Model.cs" />
+    <Compile Include="Graphics\Model\ModelLoader.cs" />
+    <Compile Include="Graphics\ResourceManagement\Resource.cs" />
+    <Compile Include="Graphics\ResourceManagement\ResourceManager.cs" />
+    <Compile Include="Graphics\ResourceManagement\ShaderRegistry.cs" />
+    <Compile Include="Graphics\Shader\IShader.cs" />
+    <Compile Include="Graphics\Model\Mesh.cs" />
     <Compile Include="Graphics\D3DRenderer.cs" />
-    <Compile Include="Graphics\IDrawable.cs" />
-    <Compile Include="Graphics\ColorShader.cs" />
+    <Compile Include="Graphics\RenderSurfaces\RenderFormSurface.cs" />
+    <Compile Include="Graphics\Shader\ColorShader.cs" />
+    <Compile Include="Graphics\Shader\Material.cs" />
+    <Compile Include="Graphics\Shader\Shader.cs" />
+    <Compile Include="Graphics\Shader\ShaderBufferDeclaration.cs" />
+    <Compile Include="Graphics\Shader\ShaderResource.cs" />
+    <Compile Include="Graphics\Shader\SimpleLitShader.cs" />
+    <Compile Include="Graphics\Shader\UIShader.cs" />
+    <Compile Include="Graphics\Texture\Texture.cs" />
+    <Compile Include="Graphics\Model\TexturedMesh.cs" />
+    <Compile Include="Graphics\Texture\TextureLoader.cs" />
+    <Compile Include="Graphics\Shader\TextureShader.cs" />
+    <Compile Include="Graphics\Texture\TextureSampler.cs" />
+    <Compile Include="Graphics\UI\FontProvider.cs" />
+    <Compile Include="Graphics\UI\ImGuiRenderer.cs" />
+    <Compile Include="Lights\AmbientLight.cs" />
+    <Compile Include="Lights\DirectionalLight.cs" />
+    <Compile Include="Lights\Light.cs" />
+    <Compile Include="Lights\PerObjectLightBuffer.cs" />
+    <Compile Include="Lights\PointLight.cs" />
+    <Compile Include="Lights\PositionalLight.cs" />
+    <Compile Include="Lights\SceneLightManager.cs" />
+    <Compile Include="Lights\SharedLightBuffer.cs" />
+    <Compile Include="Lights\SpotLight.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer.cs" />
-    <Compile Include="Tests\TestCube.cs" />
-    <Compile Include="Tests\TestTriangle.cs" />
+    <Compile Include="RendererCVars.cs" />
+    <Compile Include="RenderNodes\MeshRenderNode.cs" />
+    <Compile Include="RenderNodes\ModelRenderNode.cs" />
+    <Compile Include="RenderNodes\RenderNode.cs" />
+    <Compile Include="Scene\Commands\CreateModelNodesCommand.cs" />
+    <Compile Include="Scene\Commands\CreateUniqueMaterialCommand.cs" />
+    <Compile Include="Scene\Commands\RenderSceneCommand.cs" />
+    <Compile Include="Scene\Commands\SetMaterialParametersCommand.cs" />
+    <Compile Include="Scene\RenderScene.cs" />
+    <Compile Include="Scene\SceneViewInfo.cs" />
+    <Compile Include="Scene\WindowRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
+    <Content Include="Resources\Shaders\ColorShader.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\DebugLinePS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\DebugLineVS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\DebugObjectPS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\DebugObjectVS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\SimpleLitPS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\SimpleLitVS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\TextureShader.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\UIShaderPS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\UIShaderVS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\background.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\background_bump.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\chain_texture.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\chain_texture_bump.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\chain_texture_mask.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\lion.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\lion2_bump.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\lion_bump.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\spnza_bricks_a_bump.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\spnza_bricks_a_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\spnza_bricks_a_spec.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_arch_bump.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_arch_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_arch_spec.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_ceiling_a_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_ceiling_a_spec.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_column_a_bump.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_column_a_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_column_a_spec.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_column_b_bump.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_column_b_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_column_b_spec.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_column_c_bump.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_column_c_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_column_c_spec.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_curtain_blue_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_curtain_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_curtain_green_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_details_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_details_spec.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_fabric_blue_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_fabric_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_fabric_green_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_fabric_purple.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_fabric_spec.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_flagpole_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_flagpole_spec.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_floor_a_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_floor_a_spec.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_roof_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_thorn_bump.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_thorn_diff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_thorn_mask.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\sponza_thorn_spec.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\vase_bump.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\vase_dif.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\vase_hanging.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\vase_plant.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\vase_plant_mask.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\vase_plant_spec.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\vase_round.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\vase_round_bump.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\SponzaAtrium\Textures\vase_round_spec.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\DebugPrimitives\DebugCone.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DebugPrimitives\DebugCylinder.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DebugPrimitives\DebugHemisphere.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DebugPrimitives\DebugPyramid.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DebugPrimitives\DebugSphere.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Fonts\Inconsolata-Regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Textures\DefaultBlack.tga">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Textures\DefaultWhite.tga">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestResources\SponzaAtrium\sponza.mtl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestResources\SponzaAtrium\sponza.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="RenderNodes\" />
-    <Folder Include="Scene\" />
+    <PackageReference Include="AssimpNet">
+      <Version>4.1.0-rc2</Version>
+    </PackageReference>
+    <PackageReference Include="ImGui.NET">
+      <Version>1.65.0-beta1</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.D3DCompiler">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Desktop">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Diagnostics">
+      <Version>2.0.4</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Direct2D1">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Direct3D11">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.DirectInput">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Mathematics">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="TeximpNet">
+      <Version>1.3.0</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\KlaxConfig\KlaxConfig.csproj">
+      <Project>{0D03DB57-F78C-4F41-AC74-9CC681E5B7BE}</Project>
+      <Name>KlaxConfig</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KlaxIO\KlaxIO.csproj">
+      <Project>{8b13db51-88d9-46fc-aacb-a0698b9921bb}</Project>
+      <Name>KlaxIO</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KlaxMath\KlaxMath.csproj">
       <Project>{11eea24a-8356-46d1-9642-f895491a7f6d}</Project>
       <Name>KlaxMath</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KlaxShared\KlaxShared.csproj">
+      <Project>{54221683-92bc-45b2-8d5e-c61277be0a1a}</Project>
+      <Name>KlaxShared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Textures\DefaultTexture.tga">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Textures\MissingTexture.tga">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

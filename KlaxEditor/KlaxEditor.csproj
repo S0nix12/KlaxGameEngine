@@ -1,0 +1,695 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C5EFD70E-AB7B-4680-9B45-A9CD42FC3A0D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>KlaxEditor</RootNamespace>
+    <AssemblyName>KlaxEditor</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\NewtonsoftJsonModified\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework.Aero2" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Behaviors\EventToCommandBehavior.cs" />
+    <Compile Include="Converters\IndexToListHeaderConverter.cs" />
+    <Compile Include="Converters\LodToVisibilityConverter.cs" />
+    <Compile Include="Converters\ColorToBrushConverter.cs" />
+    <Compile Include="Converters\TextStartUpperConverter.cs" />
+    <Compile Include="Converters\VisibilityCombineMultiConverter.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Selectors\ExecutionPinTemplateSelector.cs" />
+    <Compile Include="UserControls\AssetBrowser\AssetEntryControl.xaml.cs">
+      <DependentUpon>AssetEntryControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ClickSelectTextBox.cs" />
+    <Compile Include="UserControls\CommandHeaderControl.cs" />
+    <Compile Include="UserControls\EditableTextBlock.xaml.cs">
+      <DependentUpon>EditableTextBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\BaseInspectorCategory.cs" />
+    <Compile Include="UserControls\InspectorControls\EditorFunctionInspector.xaml.cs">
+      <DependentUpon>EditorFunctionInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\Collections\DictionaryInspector.xaml.cs">
+      <DependentUpon>DictionaryInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\EnumInspector.xaml.cs">
+      <DependentUpon>EnumInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\HashedNameInspector.xaml.cs">
+      <DependentUpon>HashedNameInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\InspectorPropertyName.xaml.cs">
+      <DependentUpon>InspectorPropertyName.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\IPropertyInspector.cs" />
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\Collections\ListInspector.xaml.cs">
+      <DependentUpon>ListInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\PropertyInspector.xaml.cs">
+      <DependentUpon>PropertyInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\SubtypeOfInspector.xaml.cs">
+      <DependentUpon>SubtypeOfInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\Vector2Inspector.xaml.cs">
+      <DependentUpon>Vector2Inspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\SimpleInspectorCategory.xaml.cs">
+      <DependentUpon>SimpleInspectorCategory.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\StandaloneInspectorControl.xaml.cs">
+      <DependentUpon>StandaloneInspectorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\TypeInspector.xaml.cs">
+      <DependentUpon>TypeInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\NumericTextBoxInputField.xaml.cs">
+      <DependentUpon>NumericTextBoxInputField.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\AssetReferenceInspector.xaml.cs">
+      <DependentUpon>AssetReferenceInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\TextboxMultiConverter.cs" />
+    <Compile Include="UserControls\ConsoleSuggestionBox.xaml.cs">
+      <DependentUpon>ConsoleSuggestionBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\BaseInspectorControl.cs" />
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\BoolInspector.xaml.cs">
+      <DependentUpon>BoolInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\ColorInspector.xaml.cs">
+      <DependentUpon>ColorInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\FloatInspector.xaml.cs">
+      <DependentUpon>FloatInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\IInspectorView.cs" />
+    <Compile Include="UserControls\InspectorControls\ExpandableInspectorCategory.xaml.cs">
+      <DependentUpon>ExpandableInspectorCategory.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\IntegerInspector.xaml.cs">
+      <DependentUpon>IntegerInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\QuaternionInspector.xaml.cs">
+      <DependentUpon>QuaternionInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\StringInspector.xaml.cs">
+      <DependentUpon>StringInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InspectorControls\PropertyInspectors\Vector3Inspector.xaml.cs">
+      <DependentUpon>Vector3Inspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utility\DragDropHelpers.cs" />
+    <Compile Include="Utility\EditorControlUtility.cs" />
+    <Compile Include="Utility\EditorConversionUtility.cs" />
+    <Compile Include="Utility\EditorEntityUtility.cs" />
+    <Compile Include="Utility\EditorKlaxScriptUtility.cs" />
+    <Compile Include="Utility\EditorTypes.cs" />
+    <Compile Include="Utility\InspectorTestComponent.cs" />
+    <Compile Include="Utility\PreviewScene.cs" />
+    <Compile Include="ViewModels\EditorWindows\AssetPreviewerViewModel.cs" />
+    <Compile Include="ViewModels\EditorWindows\EntityBuilderInspectorViewModel.cs" />
+    <Compile Include="ViewModels\KlaxScript\AddNodeViewModel.cs" />
+    <Compile Include="ViewModels\KlaxScript\FunctionEditorViewModel.cs" />
+    <Compile Include="ViewModels\KlaxScript\InterfaceEditorViewmodel.cs" />
+    <Compile Include="ViewModels\KlaxScript\NodeGraphViewModel.cs" />
+    <Compile Include="ViewModels\KlaxScript\PinViewModel.cs" />
+    <Compile Include="Views\KlaxScript\AddNodePopup.xaml.cs">
+      <DependentUpon>AddNodePopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\KlaxScript\Controls\PinControl.cs" />
+    <Compile Include="ViewModels\KlaxScript\ScriptNodeViewModel.cs" />
+    <Compile Include="ViewModels\LayoutManagerViewModel.cs" />
+    <Compile Include="Utility\MouseHook.cs" />
+    <Compile Include="Utility\UndoRedo\IUndoContext.cs" />
+    <Compile Include="Utility\UndoRedo\UndoItems\RelayUndoItem.cs" />
+    <Compile Include="Utility\UndoRedo\UndoItems\UndoItem.cs" />
+    <Compile Include="Utility\UndoRedo\UndoItemGroup.cs" />
+    <Compile Include="Utility\UndoRedo\UndoRedoModel.cs" />
+    <Compile Include="Utility\UndoRedo\UndoRedoUtility.cs" />
+    <Compile Include="ViewModels\EditorWindows\AssetBrowserViewModel.cs" />
+    <Compile Include="ViewModels\EditorWindows\ConsoleViewModel.cs" />
+    <Compile Include="ViewModels\EditorWindows\EditorWindowViewModel.cs" />
+    <Compile Include="AvalonDock\LayoutInitializer.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Themes\DarkTheme\DarkTheme.cs" />
+    <Compile Include="UserControls\IntegratedTitleBar.xaml.cs">
+      <DependentUpon>IntegratedTitleBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\EditorWindows\EntityBuilderViewModel.cs" />
+    <Compile Include="ViewModels\EditorWindows\InspectorViewModel.cs" />
+    <Compile Include="ViewModels\EditorWindows\Interfaces\IConsoleView.cs" />
+    <Compile Include="ViewModels\EditorWindows\Interfaces\IOutlinerView.cs" />
+    <Compile Include="ViewModels\EditorWindows\ViewportViewModel.cs" />
+    <Compile Include="ViewModels\EditorWindows\WorldOutlinerViewModel.cs" />
+    <Compile Include="ViewModels\MaterialEditorViewModel.cs" />
+    <Compile Include="Views\AssetBrowserView.xaml.cs">
+      <DependentUpon>AssetBrowserView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AssetPickerDialog.xaml.cs">
+      <DependentUpon>AssetPickerDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AssetPreviewerView.xaml.cs">
+      <DependentUpon>AssetPreviewerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ColorPickerWindow.xaml.cs">
+      <DependentUpon>ColorPickerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Console.xaml.cs">
+      <DependentUpon>Console.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EntityBuilder.xaml.cs">
+      <DependentUpon>EntityBuilder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EntityBuilderInspector.xaml.cs">
+      <DependentUpon>EntityBuilderInspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Inspector.xaml.cs">
+      <DependentUpon>Inspector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\KlaxDialog.xaml.cs">
+      <DependentUpon>KlaxDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\DialogViewModel.cs" />
+    <Compile Include="Utility\RelayCommand.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="ViewModels\Workspace.cs" />
+    <Compile Include="UserControls\RendererHostControl.cs" />
+    <Compile Include="Views\KlaxScript\DataSelector\AddNodeDataTemplateSelector.cs" />
+    <Compile Include="Views\KlaxScript\InterfaceEditorView.xaml.cs">
+      <DependentUpon>InterfaceEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\KlaxScript\NodeGraphView.xaml.cs">
+      <DependentUpon>NodeGraphView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\KlaxScript\ScriptNodeView.xaml.cs">
+      <DependentUpon>ScriptNodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\KlaxScript\Controls\SmoothLineControl.cs" />
+    <Compile Include="Views\LayoutSaveDialog.xaml.cs">
+      <DependentUpon>LayoutSaveDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MaterialEditorView.xaml.cs">
+      <DependentUpon>MaterialEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Viewport.xaml.cs">
+      <DependentUpon>Viewport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WorldOutliner.xaml.cs">
+      <DependentUpon>WorldOutliner.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Resources\Styles\ButtonStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\Converters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\CommonStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\MenuStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\TextBoxStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\TreeViewStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Themes\DarkTheme\Brushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Themes\DarkTheme\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\AssetBrowser\AssetEntryControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ConsoleSuggestionBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\EditableTextBlock.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\AssetReferenceInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\BoolInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\Collections\DictionaryInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\ColorInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\EditorFunctionInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\EnumInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\FloatInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\HashedNameInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\ExpandableInspectorCategory.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\IntegerInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\Collections\ListInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\QuaternionInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\SubtypeOfInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\Vector2Inspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\SimpleInspectorCategory.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\StandaloneInspectorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\StringInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\TypeInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\PropertyInspectors\Vector3Inspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InspectorControls\InspectorPropertyName.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\IntegratedTitleBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\NumericTextBoxInputField.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\KlaxScript\AddNodePopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\KlaxScript\InterfaceEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\KlaxScript\Styles\KlaxScriptStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AssetBrowserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AssetPickerDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AssetPreviewerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ColorPickerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Console.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EntityBuilder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EntityBuilderInspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Inspector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\KlaxDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\KlaxScript\NodeGraphView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\KlaxScript\ScriptNodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LayoutSaveDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MaterialEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Viewport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WorldOutliner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Resources\Layouts\Default.cfg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Layouts\KlaxScript.cfg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KlaxConfig\KlaxConfig.csproj">
+      <Project>{0D03DB57-F78C-4F41-AC74-9CC681E5B7BE}</Project>
+      <Name>KlaxConfig</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KlaxCore\KlaxCore.csproj">
+      <Project>{94bab26e-c944-44d7-a603-ce974f6642b6}</Project>
+      <Name>KlaxCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KlaxMath\KlaxMath.csproj">
+      <Project>{11EEA24A-8356-46D1-9642-F895491A7F6D}</Project>
+      <Name>KlaxMath</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KlaxRenderer\KlaxRenderer.csproj">
+      <Project>{71E9ED84-3374-452D-8BFE-E77393203955}</Project>
+      <Name>KlaxRenderer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KlaxShared\KlaxShared.csproj">
+      <Project>{54221683-92bc-45b2-8d5e-c61277be0a1a}</Project>
+      <Name>KlaxShared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KlaxIO\KlaxIO.csproj">
+      <Project>{8B13DB51-88D9-46FC-AACB-A0698B9921BB}</Project>
+      <Name>KlaxIO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WPFExtensions\Digimezzo.WPFControls\Digimezzo.WPFControls.csproj">
+      <Project>{14cab61b-42ea-4dae-b79b-65a246d2a585}</Project>
+      <Name>Digimezzo.WPFControls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WPFExtensions\Xceed.Wpf.AvalonDock\Xceed.Wpf.AvalonDock.csproj">
+      <Project>{db81988f-e0f2-45a0-a1fd-8c37f3d35244}</Project>
+      <Name>Xceed.Wpf.AvalonDock</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WPFExtensions\Xceed.Wpf.Toolkit\Xceed.Wpf.Toolkit.csproj">
+      <Project>{72e591d6-8f83-4d8c-8f67-9c325e623234}</Project>
+      <Name>Xceed.Wpf.Toolkit</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Windows\fa_warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="AvalonDock\Images\document.png" />
+    <Resource Include="AvalonDock\Images\property-blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Windows\fa_close.png" />
+    <Resource Include="Resources\Images\Windows\fa_maximize.png" />
+    <Resource Include="Resources\Images\Windows\fa_minimize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Windows\fa_restore.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Windows\titlebar_bg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Windows\generic_bg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Tabs\viewport.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockAnchorableBottom.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockAnchorableLeft.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockAnchorableRight.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockAnchorableTop.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockDocumentAsAnchorableBottom.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockDocumentAsAnchorableLeft.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockDocumentAsAnchorableRight.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockDocumentAsAnchorableTop.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockDocumentBottom.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockDocumentInside.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockDocumentLeft.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockDocumentRight.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockDocumentTop.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockPaneEmpty.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\DockPaneLargeEmpty.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\HTabGroup.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\Locked.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinAutoHide.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinAutoHide_Black.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinAutoHide_Dark.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinClose.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinClose_Black.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinClose_Dark.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinDocMenu.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinDocMenu_Black.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinMaximize.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinMaximize_Black.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinMaximize_Dark.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinMenu.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinMenu_Black.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinMenu_Dark.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinRestore.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinRestore_Black.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\PinRestore_Dark.png" />
+    <Resource Include="Resources\Themes\DarkTheme\Images\VTabGroup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Tabs\outliner.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Windows\titlebar_bg_leftend.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AssimpNet">
+      <Version>4.1.0-rc2</Version>
+    </PackageReference>
+    <PackageReference Include="Expression.Blend.Sdk.WPF">
+      <Version>1.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="ImGui.NET">
+      <Version>1.65.0-beta1</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Desktop">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.Mathematics">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="TeximpNet">
+      <Version>1.3.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Windows\TransparentBG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Tabs\assetbrowser.png" />
+    <Resource Include="Resources\Images\Tabs\console.png" />
+    <Resource Include="Resources\Images\Tabs\entitybuilder.png" />
+    <Resource Include="Resources\Images\Tabs\inspector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Windows\fa_cog.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Tabs\materialeditor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\DesignTime\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Windows\fa_plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Windows\klaxScript_bg.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /y "$(SolutionDir)native\$(PlatformName)\*.dll" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
+</Project>
