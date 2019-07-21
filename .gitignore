@@ -97,9 +97,9 @@ StyleCopReport.xml
 *.scc
 
 # Don't ignore resource folders
-!*/TestResources/*
-!*/Resources/*
-!*/EngineResources/*
+!*/TestResources/**
+!*/Resources/**
+!*/EngineResources/**
 
 # Don't ignore native dlls
 !/native/*
