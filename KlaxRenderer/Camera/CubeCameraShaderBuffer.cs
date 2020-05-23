@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using KlaxMath;
 using KlaxRenderer.Graphics;
 using KlaxRenderer.Lights;
 using KlaxRenderer.Scene;
@@ -13,17 +15,26 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 
 namespace KlaxRenderer.Camera
 {
-	class CCameraShaderBuffer : IDisposable
+	class CCubeCameraShaderBuffer : IDisposable
 	{
 		public const int TargetSlot = 11;
 
 #pragma warning disable 0169, 0649
+		[StructLayout(LayoutKind.Sequential)]
 		private struct BufferType
 		{
-			public Matrix viewProjectionMatrix;
-			public Vector3 directionalLightDirection;
-			private float farRange;
+			public Matrix projectionMatrix;
+			public Matrix viewMatrixX;
+			public Matrix viewMatrixNX;
+			public Matrix viewMatrixY;
+			public Matrix viewMatrixNY;
+			public Matrix viewMatrixZ;
+			public Matrix viewMatrixNZ;
+
+			public Vector3 cubeCenterPos;
+			public float cubeFarPlane;
 		}
+
 #pragma warning restore 0169, 0649
 
 		public void Init(Device device)
@@ -66,7 +77,19 @@ namespace KlaxRenderer.Camera
 		public void UpdateBuffer(DeviceContext deviceContext, in SSceneViewInfo viewInfo)
 		{
 			deviceContext.MapSubresource(m_cameraBuffer, MapMode.WriteDiscard, MapFlags.None, out DataStream dataStream);
-			dataStream.Write(Matrix.Transpose(viewInfo.ViewMatrix * viewInfo.ProjectionMatrix));
+			dataStream.Write(Matrix.Transpose(viewInfo.ProjectionMatrix));
+
+			Vector3[] forwardArray = { Axis.Right, -Axis.Right, Axis.Up, -Axis.Up, Axis.Forward, -Axis.Forward, };
+			Vector3[] upArray = { Axis.Up, Axis.Up, -Axis.Forward, Axis.Forward, Axis.Up, Axis.Up };
+
+			for (int i = 0; i < 6; i++)
+			{
+
+				Vector3 worldPos = viewInfo.ViewLocation;
+				Matrix viewMatrix = Matrix.LookAtLH(worldPos, worldPos + forwardArray[i], upArray[i]);
+				dataStream.Write(Matrix.Transpose(viewMatrix));
+			}
+
 			dataStream.Write(viewInfo.ViewLocation);
 			dataStream.Write(viewInfo.ScreenFar);
 			deviceContext.UnmapSubresource(m_cameraBuffer, 0);

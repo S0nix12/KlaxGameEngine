@@ -9,6 +9,7 @@ using SharpDX;
 using SharpDX.Direct3D11;
 using KlaxRenderer.Lights;
 using KlaxShared;
+using KlaxRenderer.Graphics.Shader;
 
 namespace KlaxRenderer.Graphics
 {
@@ -32,9 +33,17 @@ namespace KlaxRenderer.Graphics
 			{
 				mesh.Render(deviceContext);
 			}
-        }
+		}
 
-	    public void SetScalarParameter(SHashedName parameterName, float scalar)
+		internal void RenderWithShader(DeviceContext deviceContext, CShaderResource shaderResource)
+		{
+			foreach (CMesh mesh in m_meshes)
+			{
+				mesh.RenderWithShader(deviceContext, shaderResource);
+			}
+		}
+
+		public void SetScalarParameter(SHashedName parameterName, float scalar)
 	    {
 		    foreach (CMesh mesh in m_meshes)
 		    {

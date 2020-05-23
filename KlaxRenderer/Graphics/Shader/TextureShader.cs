@@ -47,8 +47,8 @@ namespace KlaxRenderer.Graphics
 			matrixBufferDeclaration.targetSlot = 0;
 			matrixBufferDeclaration.targetStage = EShaderTargetStage.Vertex;
 
-			matrixBufferDeclaration.AddParameterTarget(new SHashedName("worldMatrix"), EShaderParameterType.Matrix);
-			matrixBufferDeclaration.AddParameterTarget(new SHashedName("invTransposeWorldMatrix"), EShaderParameterType.Matrix);
+			matrixBufferDeclaration.AddParameterTarget(SShaderParameterNames.WorldMatrixParameterName, EShaderParameterType.Matrix);
+			matrixBufferDeclaration.AddParameterTarget(SShaderParameterNames.InvTransWorldMatrixParName, EShaderParameterType.Matrix);
 
 			AddShaderBufferDeclaration(in matrixBufferDeclaration);
 

@@ -52,4 +52,11 @@ namespace KlaxRenderer
 
         private readonly CRenderer m_renderer;
     }
+
+	public static class CStaticRendererCvars
+	{
+
+		[CVar(1024)]
+		public static int ShadowMapSize { get; private set; } = 1024;
+	}
 }

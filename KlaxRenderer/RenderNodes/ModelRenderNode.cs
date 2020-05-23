@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using KlaxMath.Geometry;
 using KlaxRenderer.Graphics;
+using KlaxRenderer.Graphics.Shader;
 using SharpDX;
 using SharpDX.Direct3D11;
 
@@ -33,6 +34,11 @@ namespace KlaxRenderer.RenderNodes
 			m_model.Render(deviceContext);
 		}
 
+		internal override void DrawWithShader(DeviceContext deviceContext, CShaderResource shaderResource)
+		{
+			m_model.RenderWithShader(deviceContext, shaderResource);
+		}
+
 		public override bool TryCreateResources()
 		{
 			throw new NotImplementedException();
@@ -46,6 +52,11 @@ namespace KlaxRenderer.RenderNodes
 		}
 
 		public override ContainmentType FrustumTest(in BoundingFrustum frustum)
+		{
+			return ContainmentType.Contains;
+		}
+
+		public override ContainmentType BoundingBoxTest(in BoundingBox boundingBox)
 		{
 			return ContainmentType.Contains;
 		}

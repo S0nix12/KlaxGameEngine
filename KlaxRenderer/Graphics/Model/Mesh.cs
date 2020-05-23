@@ -2,11 +2,14 @@
 using KlaxIO.AssetManager.Assets;
 using KlaxMath;
 using KlaxRenderer.Graphics.ResourceManagement;
+using KlaxRenderer.Graphics.Shader;
 using KlaxShared.Attributes;
+using KlaxShared.Definitions.Graphics;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
-using Device = SharpDX.Direct3D11.Device;
+using Device = SharpDX.Direct3D11.Device;		
+using ShaderParameterDict = System.Collections.Generic.Dictionary<KlaxShared.SHashedName, KlaxShared.Definitions.Graphics.SShaderParameter>;
 
 namespace KlaxRenderer.Graphics
 {
@@ -103,6 +106,38 @@ namespace KlaxRenderer.Graphics
 		{
 			System.Diagnostics.Debug.Assert(material != null);
 			material.Render(deviceContext, transform.WorldMatrix);
+			deviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(m_vertexBuffer, m_sizePerVertex, 0));
+			deviceContext.InputAssembler.SetIndexBuffer(m_indexBuffer, SharpDX.DXGI.Format.R32_UInt, 0);
+			deviceContext.InputAssembler.PrimitiveTopology = m_primitiveTopology;
+			deviceContext.DrawIndexed(m_indexCount, 0, 0);
+		}
+
+		internal void RenderWithShader(DeviceContext deviceContext, CShaderResource shaderResource)
+		{
+			System.Diagnostics.Debug.Assert(shaderResource != null);
+			Transform combinedTransform = new Transform();
+			combinedTransform.SetFromMatrix(Matrix.Multiply(Transform.WorldMatrix, ParentTransform.LocalMatrix));
+
+			RenderWithShader(deviceContext, shaderResource, combinedTransform);
+		}
+
+		internal void RenderWithShader(DeviceContext deviceContext, CShaderResource shaderResource, Transform transform)
+		{
+			System.Diagnostics.Debug.Assert(shaderResource != null);
+			ShaderParameterDict parameters = new ShaderParameterDict();
+
+			SShaderParameter worldMatrixParameter = new SShaderParameter()
+			{
+				parameterData = transform.WorldMatrix,
+				parameterType = EShaderParameterType.Matrix
+			};
+			parameters[SShaderParameterNames.WorldMatrixParameterName] = worldMatrixParameter;
+			worldMatrixParameter.parameterData = Matrix.Invert(transform.WorldMatrix);
+			parameters[SShaderParameterNames.InvTransWorldMatrixParName] = worldMatrixParameter;
+
+			shaderResource.Shader.SetShaderParameters(deviceContext, parameters);
+			shaderResource.Shader.SetActive(deviceContext);
+
 			deviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(m_vertexBuffer, m_sizePerVertex, 0));
 			deviceContext.InputAssembler.SetIndexBuffer(m_indexBuffer, SharpDX.DXGI.Format.R32_UInt, 0);
 			deviceContext.InputAssembler.PrimitiveTopology = m_primitiveTopology;

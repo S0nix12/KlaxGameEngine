@@ -7,7 +7,7 @@ namespace KlaxRenderer.Graphics
 {
     public class CTexture : IDisposable
     {
-        public void InitFromFile(Device device, DeviceContext deviceContext, string filePath)
+        public virtual void InitFromFile(Device device, DeviceContext deviceContext, string filePath)
         {
             m_texture = TextureLoader.CreateTex2DFromFile(device, deviceContext, filePath);
 
@@ -24,7 +24,7 @@ namespace KlaxRenderer.Graphics
             deviceContext.GenerateMips(m_textureView);
         }
 
-	    public void InitFromData(Device device, DeviceContext deviceContext, IntPtr dataPtr, int pitch, in Texture2DDescription description, bool bGenerateMips)
+	    public virtual void InitFromData(Device device, DeviceContext deviceContext, IntPtr dataPtr, int pitch, in Texture2DDescription description, bool bGenerateMips)
 	    {
 			m_texture = new Texture2D(device, description);
 			deviceContext.UpdateSubresource(new DataBox(dataPtr, pitch, 0), m_texture);
@@ -50,13 +50,13 @@ namespace KlaxRenderer.Graphics
             return m_textureView;
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             m_textureView?.Dispose();
             m_texture?.Dispose();
 		}
 
-        private Texture2D m_texture;
-        private ShaderResourceView m_textureView;
+        protected Texture2D m_texture;
+        protected ShaderResourceView m_textureView;
     }
 }

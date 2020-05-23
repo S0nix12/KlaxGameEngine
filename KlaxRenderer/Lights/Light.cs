@@ -9,5 +9,10 @@ namespace KlaxRenderer.Lights
 	public interface ILight
 	{
 		ELightType GetLightType();
+		bool IsCastingShadow();
+		bool IsShadowMapCube();
+		bool NeedsShadowMapInit();
+
+		int ShadowMapRegister { get; set; }
 	}
 }

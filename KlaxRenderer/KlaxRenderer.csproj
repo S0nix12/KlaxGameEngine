@@ -28,6 +28,7 @@
     <LangVersion>latest</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -80,6 +81,7 @@
     <Compile Include="Camera\BaseCamera.cs" />
     <Compile Include="Camera\CameraManager.cs" />
     <Compile Include="Camera\CameraShaderBuffer.cs" />
+    <Compile Include="Camera\CubeCameraShaderBuffer.cs" />
     <Compile Include="Camera\DebugCamera.cs" />
     <Compile Include="Camera\ICamera.cs" />
     <Compile Include="Debug\DebugLineCommandList.cs" />
@@ -103,6 +105,8 @@
     <Compile Include="Graphics\ResourceManagement\Resource.cs" />
     <Compile Include="Graphics\ResourceManagement\ResourceManager.cs" />
     <Compile Include="Graphics\ResourceManagement\ShaderRegistry.cs" />
+    <Compile Include="Graphics\Shader\DepthCubeShader.cs" />
+    <Compile Include="Graphics\Shader\DepthShader.cs" />
     <Compile Include="Graphics\Shader\IShader.cs" />
     <Compile Include="Graphics\Model\Mesh.cs" />
     <Compile Include="Graphics\D3DRenderer.cs" />
@@ -114,6 +118,10 @@
     <Compile Include="Graphics\Shader\ShaderResource.cs" />
     <Compile Include="Graphics\Shader\SimpleLitShader.cs" />
     <Compile Include="Graphics\Shader\UIShader.cs" />
+    <Compile Include="Graphics\Texture\DepthCubeTexture.cs" />
+    <Compile Include="Graphics\Texture\DepthTexture.cs" />
+    <Compile Include="Graphics\Texture\RenderTexture.cs" />
+    <Compile Include="Graphics\Texture\RenderTextureArray.cs" />
     <Compile Include="Graphics\Texture\Texture.cs" />
     <Compile Include="Graphics\Model\TexturedMesh.cs" />
     <Compile Include="Graphics\Texture\TextureLoader.cs" />
@@ -128,6 +136,7 @@
     <Compile Include="Lights\PointLight.cs" />
     <Compile Include="Lights\PositionalLight.cs" />
     <Compile Include="Lights\SceneLightManager.cs" />
+    <Compile Include="Lights\ShadowMapSamplers.cs" />
     <Compile Include="Lights\SharedLightBuffer.cs" />
     <Compile Include="Lights\SpotLight.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -159,6 +168,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Shaders\DebugObjectVS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\DepthCubeShader.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\DepthShader.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Shaders\SimpleLitPS.hlsl">

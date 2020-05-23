@@ -3,6 +3,8 @@
 ////////////
 
 #define MAX_PER_OBJECT_LIGHTS 6
+#define SHADOW_BIAS 0.0012f
+#define SHADOW_BIAS_LINEAR 0.12f
 
 // Light types.
 #define DIRECTIONAL_LIGHT 0
@@ -16,6 +18,8 @@ struct PSInput
     float2 texCoord : TEXCOORD0;
     float3 viewDirection : TEXCOORD1;
     float4 positionWS : TEXCOORD2;
+	
+	float4 positionLightSpace[MAX_PER_OBJECT_LIGHTS] : TEXCOORD3;
 };
 
 struct DirLight
@@ -37,7 +41,13 @@ struct Light
     float quadraticAttenuation;
     int lightType; // 0 = Directional 1 = Point 2 = Spot
     bool bEnabled;
-    float _padding;
+	bool bCastShadows;
+	
+	matrix viewProjection;
+	
+	int shadowMapRegister;
+	
+    float3 _padding0;
 };
 
 cbuffer MaterialDescription : register(b1)
@@ -64,11 +74,225 @@ cbuffer SharedLightBuffer : register(b13)
 Texture2D shaderTexture : register(ps, t0);
 SamplerState samplerType : register(ps, s0);
 
+TextureCube cubeShadow0 : register(ps, t20);
+TextureCube cubeShadow1 : register(ps, t21);
+TextureCube cubeShadow2 : register(ps, t22);
+TextureCube cubeShadow3 : register(ps, t23);
+TextureCube cubeShadow4 : register(ps, t24);
+TextureCube cubeShadow5 : register(ps, t25);
+
+SamplerState shadowMapSampler : register(ps, s10);
+SamplerComparisonState shadowMapComparisionSampler : register(ps, s11);
+
+Texture2D shadowMap0 : register(ps, t26);
+Texture2D shadowMap1 : register(ps, t27);
+Texture2D shadowMap2 : register(ps, t28);
+Texture2D shadowMap3 : register(ps, t29);
+Texture2D shadowMap4 : register(ps, t30);
+Texture2D shadowMap5 : register(ps, t31);
+
+
 struct LightingResult
 {
     float4 diffuseColor;
     float4 specularColor;
 };
+
+float vectorToDepth(float3 vec, float near, float far)
+{
+	float3 AbsVec = abs(vec);
+	float LocalZcomp = max(AbsVec.x, max(AbsVec.y, AbsVec.z));
+
+	float NormZComp = (far + near) / (far - near) - (2 * far * near) / (far - near) / LocalZcomp;
+	return (NormZComp + 1.0) * 0.5;
+}
+
+// UE4: https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Shaders/ShadowProjectionCommon.usf
+static const float2 DiscSamples5[] =
+{ // 5 random points in disc with radius 2.500000
+	float2(0.000000, 2.500000),
+	float2(2.377641, 0.772542),
+	float2(1.469463, -2.022543),
+	float2(-1.469463, -2.022542),
+	float2(-2.377641, 0.772543),
+};
+
+float sampleCubeShadowPCFDisc5Map0(float3 normalLight, float3 light, float currentDepth)
+{
+	float3 SideVector = normalize(cross(normalLight, float3(0, 0, 1)));
+	float3 UpVector = cross(SideVector, normalLight);
+
+	SideVector *= 1.0 / 1024.0;
+	UpVector *= 1.0 / 1024.0;
+
+	float totalShadow = 0;
+
+	[unroll]
+	for (int i = 0; i < 5; ++i)
+	{
+		float3 SamplePos = normalLight + SideVector * DiscSamples5[i].x + UpVector * DiscSamples5[i].y;
+		totalShadow += cubeShadow0.SampleCmpLevelZero(
+				shadowMapComparisionSampler,
+				SamplePos,
+				currentDepth);
+	}
+	totalShadow /= 5;
+
+	return totalShadow;
+}
+
+float sampleCubeShadowPCFDisc5Map1(float3 normalLight, float3 light, float currentDepth)
+{
+	float3 SideVector = normalize(cross(normalLight, float3(0, 0, 1)));
+	float3 UpVector = cross(SideVector, normalLight);
+
+	SideVector *= 1.0 / 1024.0;
+	UpVector *= 1.0 / 1024.0;
+
+	float totalShadow = 0;
+
+	[unroll]
+	for (int i = 0; i < 5; ++i)
+	{
+		float3 SamplePos = normalLight + SideVector * DiscSamples5[i].x + UpVector * DiscSamples5[i].y;
+		totalShadow += cubeShadow0.SampleCmpLevelZero(
+				shadowMapComparisionSampler,
+				SamplePos,
+				currentDepth);
+	}
+	totalShadow /= 5;
+
+	return totalShadow;
+}
+
+float sampleCubeShadowPCFDisc5Map2(float3 normalLight, float3 light, float currentDepth)
+{
+	float3 SideVector = normalize(cross(normalLight, float3(0, 0, 1)));
+	float3 UpVector = cross(SideVector, normalLight);
+
+	SideVector *= 1.0 / 1024.0;
+	UpVector *= 1.0 / 1024.0;
+
+	float totalShadow = 0;
+
+	[unroll]
+	for (int i = 0; i < 5; ++i)
+	{
+		float3 SamplePos = normalLight + SideVector * DiscSamples5[i].x + UpVector * DiscSamples5[i].y;
+		totalShadow += cubeShadow0.SampleCmpLevelZero(
+				shadowMapComparisionSampler,
+				SamplePos,
+				currentDepth);
+	}
+	totalShadow /= 5;
+
+	return totalShadow;
+}
+
+float sampleCubeShadowPCFDisc5Map3(float3 normalLight, float3 light, float currentDepth)
+{
+	float3 SideVector = normalize(cross(normalLight, float3(0, 0, 1)));
+	float3 UpVector = cross(SideVector, normalLight);
+
+	SideVector *= 1.0 / 1024.0;
+	UpVector *= 1.0 / 1024.0;
+
+	float totalShadow = 0;
+
+	[unroll]
+	for (int i = 0; i < 5; ++i)
+	{
+		float3 SamplePos = normalLight + SideVector * DiscSamples5[i].x + UpVector * DiscSamples5[i].y;
+		totalShadow += cubeShadow0.SampleCmpLevelZero(
+				shadowMapComparisionSampler,
+				SamplePos,
+				currentDepth);
+	}
+	totalShadow /= 5;
+
+	return totalShadow;
+}
+
+float sampleCubeShadowPCFDisc5Map4(float3 normalLight, float3 light, float currentDepth)
+{
+	float3 SideVector = normalize(cross(normalLight, float3(0, 0, 1)));
+	float3 UpVector = cross(SideVector, normalLight);
+
+	SideVector *= 1.0 / 1024.0;
+	UpVector *= 1.0 / 1024.0;
+
+	float totalShadow = 0;
+
+	[unroll]
+	for (int i = 0; i < 5; ++i)
+	{
+		float3 SamplePos = normalLight + SideVector * DiscSamples5[i].x + UpVector * DiscSamples5[i].y;
+		totalShadow += cubeShadow0.SampleCmpLevelZero(
+				shadowMapComparisionSampler,
+				SamplePos,
+				currentDepth);
+	}
+	totalShadow /= 5;
+
+	return totalShadow;
+}
+
+float sampleCubeShadowPCFDisc5Map5(float3 normalLight, float3 light, float currentDepth)
+{
+	float3 SideVector = normalize(cross(normalLight, float3(0, 0, 1)));
+	float3 UpVector = cross(SideVector, normalLight);
+
+	SideVector *= 1.0 / 1024.0;
+	UpVector *= 1.0 / 1024.0;
+
+	float totalShadow = 0;
+
+	[unroll]
+	for (int i = 0; i < 5; ++i)
+	{
+		float3 SamplePos = normalLight + SideVector * DiscSamples5[i].x + UpVector * DiscSamples5[i].y;
+		totalShadow += cubeShadow0.SampleCmpLevelZero(
+				shadowMapComparisionSampler,
+				SamplePos,
+				currentDepth);
+	}
+	totalShadow /= 5;
+
+	return totalShadow;
+}
+
+float CalcShadowOmni(float3 fragPos, float3 lightPos, int textureRegister, float lightRange)
+{
+	float3 fragToLight = fragPos - lightPos;
+	float3 fragToLightN = normalize(fragToLight);
+	float closestDepth = 0;
+	
+	float currentDepth = length(fragToLight) / lightRange - SHADOW_BIAS_LINEAR / lightRange;
+	
+	switch (textureRegister)
+	{
+		case 20:
+			return cubeShadow0.SampleCmpLevelZero(shadowMapComparisionSampler, fragToLightN, currentDepth).r;
+			break;
+		case 21:
+			return cubeShadow1.SampleCmpLevelZero(shadowMapComparisionSampler, fragToLightN, currentDepth).r;
+			break;
+		case 22:
+			return cubeShadow2.SampleCmpLevelZero(shadowMapComparisionSampler, fragToLightN, currentDepth).r;
+			break;
+		case 23:
+			return cubeShadow3.SampleCmpLevelZero(shadowMapComparisionSampler, fragToLightN, currentDepth).r;
+			break;
+		case 24:
+			return cubeShadow4.SampleCmpLevelZero(shadowMapComparisionSampler, fragToLightN, currentDepth).r;
+			break;
+		case 25:
+			return cubeShadow5.SampleCmpLevelZero(shadowMapComparisionSampler, fragToLightN, currentDepth).r;
+			break;
+	}
+	
+	return 0.0f;
+}
 
 LightingResult CalcLight(float4 lightColor, float3 lightDir, float3 normal, float3 viewDirection)
 {
@@ -122,14 +346,66 @@ LightingResult CalcPointLight(Light pointLight, float3 normal, float3 viewDirect
 
     result = CalcLight(pointLight.color, lightDirection, normal, viewDirection);
     float attenuation = pointLight.constantAttenuation + pointLight.linearAttenuation * distance + pointLight.quadraticAttenuation * distance * distance;
-
+	
     result.diffuseColor /= attenuation;
     result.specularColor /= attenuation;
-
-    return result;
+	
+	return result;
 }
 
-LightingResult CalcSpotLight(Light spotLight, float3 normal, float3 viewDirection, float3 positionWS)
+LightingResult CalcPointLightWithShadow(Light pointLight, float3 normal, float3 viewDirection, float3 positionWS)
+{
+	LightingResult result = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };
+	result = CalcPointLight(pointLight, normal, viewDirection, positionWS);
+	
+	if (pointLight.bCastShadows)
+	{
+		float shadow = CalcShadowOmni(positionWS, pointLight.position.xyz, pointLight.shadowMapRegister, pointLight.range);
+				
+		result.diffuseColor *= shadow;
+		result.specularColor *= shadow;
+	}
+	return result;
+}
+
+float CalcShadowSpot(float4 fragPosLS, int textureRegister, float lightRange)
+{
+	float2 shadowTexCoords;
+	shadowTexCoords.x = 0.5f + (fragPosLS.x / fragPosLS.w * 0.5f);
+	shadowTexCoords.y = 0.5f - (fragPosLS.y / fragPosLS.w * 0.5f);
+	
+	float currentDepth = fragPosLS.z / lightRange - SHADOW_BIAS_LINEAR / lightRange;
+	if ((saturate(shadowTexCoords.x) == shadowTexCoords.x) &&
+		(saturate(shadowTexCoords.y) == shadowTexCoords.y) &&
+		currentDepth > 0)
+	{
+		switch (textureRegister)
+		{
+			case 26:
+				return shadowMap0.SampleCmpLevelZero(shadowMapComparisionSampler, shadowTexCoords, currentDepth).r;
+				break;
+			case 27:
+				return shadowMap1.SampleCmpLevelZero(shadowMapComparisionSampler, shadowTexCoords, currentDepth).r;
+				break;
+			case 28:
+				return shadowMap2.SampleCmpLevelZero(shadowMapComparisionSampler, shadowTexCoords, currentDepth).r;
+				break;
+			case 29:
+				return shadowMap3.SampleCmpLevelZero(shadowMapComparisionSampler, shadowTexCoords, currentDepth).r;
+				break;
+			case 30:
+				return shadowMap4.SampleCmpLevelZero(shadowMapComparisionSampler, shadowTexCoords, currentDepth).r;
+				break;
+			case 31:
+				return shadowMap5.SampleCmpLevelZero(shadowMapComparisionSampler, shadowTexCoords, currentDepth).r;
+				break;
+		}
+	}
+	
+	return 0.0f;
+}
+
+LightingResult CalcSpotLight(Light spotLight, float3 normal, float3 viewDirection, float3 positionWS, float4 positionLS)
 {
     LightingResult result = CalcPointLight(spotLight, normal, viewDirection, positionWS);
 
@@ -142,7 +418,15 @@ LightingResult CalcSpotLight(Light spotLight, float3 normal, float3 viewDirectio
 
     result.diffuseColor *= coneIntensity;
     result.specularColor *= coneIntensity;
-
+	
+	if (spotLight.bCastShadows)
+	{
+		float shadow = CalcShadowSpot(positionLS, spotLight.shadowMapRegister, spotLight.range);
+				
+		result.diffuseColor *= shadow;
+		result.specularColor *= shadow;
+	}
+	
     return result;
 }
 
@@ -169,10 +453,10 @@ float4 Pixel(PSInput input) : SV_TARGET
             case DIRECTIONAL_LIGHT:
                 break;
             case POINT_LIGHT:
-                lightResult = CalcPointLight(lights[i], input.normal, viewDirection, input.positionWS.xyz);
+                lightResult = CalcPointLightWithShadow(lights[i], input.normal, viewDirection, input.positionWS.xyz);
                 break;
             case SPOT_LIGHT:
-                lightResult = CalcSpotLight(lights[i], input.normal, viewDirection, input.positionWS.xyz);
+                lightResult = CalcSpotLight(lights[i], input.normal, viewDirection, input.positionWS.xyz, input.positionLightSpace[i]);
                 break;
         }
         lighting.diffuseColor += lightResult.diffuseColor;
@@ -182,7 +466,8 @@ float4 Pixel(PSInput input) : SV_TARGET
     lighting.diffuseColor = saturate(lighting.diffuseColor);
     lighting.specularColor = saturate(lighting.specularColor);
 
-    float4 totalLightColor = ambientColor + lighting.diffuseColor + lighting.specularColor * specularColor;
+	//return lighting.diffuseColor;
+	float4 totalLightColor = ambientColor + lighting.diffuseColor + lighting.specularColor * specularColor;
 
     //float3 normalColor = (input.normal + float3(1, 1, 1)) * 0.5;
     //return float4(normalColor, 1.0f);

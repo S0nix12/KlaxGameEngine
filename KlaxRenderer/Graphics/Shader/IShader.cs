@@ -26,7 +26,7 @@ namespace KlaxRenderer.Graphics
     public interface IShader : IDisposable
     {
         bool Init(Device device);
-        bool Init(Device device, string vertexShaderFilename, string pixelShaderFilename, string vertexShaderEntry, string pixelShaderEntry);
+        bool Init(Device device, string vertexShaderFilename, string pixelShaderFilename, string geomShaderFilename, string vertexShaderEntry, string pixelShaderEntry, string geomShaderEntry);
         bool Init(Device device, byte[] vsCode, byte[] psCode);
         void SetActive(SharpDX.Direct3D11.DeviceContext deviceContext);
 		void SetShaderParameters(DeviceContext deviceContext, Dictionary<SHashedName, SShaderParameter> parameters);
@@ -37,4 +37,5 @@ namespace KlaxRenderer.Graphics
 		//void SetScalarParameter(SharpDX.Direct3D11.DeviceContext deviceContext, SHashedName parameterName, float scalar);
 		//void SetMatrixParameter(SharpDX.Direct3D11.DeviceContext deviceContext, SHashedName parameterName, in Matrix color);
 	}
+
 }

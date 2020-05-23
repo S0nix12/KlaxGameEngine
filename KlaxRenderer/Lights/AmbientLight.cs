@@ -14,6 +14,22 @@ namespace KlaxRenderer.Lights
 			return ELightType.Ambient;
 		}
 
+		public bool IsCastingShadow()
+		{
+			return false;
+		}
+
+		public bool NeedsShadowMapInit()
+		{
+			return false;
+		}
+
+		public bool IsShadowMapCube()
+		{
+			return false;
+		}
+
 		public Vector4 LightColor { get; set; }
+		public int ShadowMapRegister { get; set; } = 0;
 	}
 }

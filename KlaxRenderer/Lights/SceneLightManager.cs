@@ -4,24 +4,130 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KlaxRenderer.Graphics;
+using KlaxRenderer.Scene;
 using KlaxShared.Definitions.Graphics;
 using SharpDX;
 using SharpDX.Direct3D11;
+using SharpDX.Mathematics.Interop;
 
 namespace KlaxRenderer.Lights
 {
 	public class CSceneLightManager : IDisposable
 	{
+		private const int CubeShadowMapBaseSlot = 20;
+		private const int MaxCubeShadowMaps = 6;
+		private const int ShadowMapBaseSlot = 26;
+		private const int MaxShadowMaps = 6;
+
 		public void Init(Device device, DeviceContext deviceContext)
 		{
 			m_sharedLightBuffer.Init(device);
 			m_perObjectLightBuffer.Init(device);
+			m_shadowMapSamplers.InitSamplers(device);
 		}
 
 		public void BindBuffer(DeviceContext deviceContext)
 		{
+			m_sharedLightBuffer.BindBuffer(deviceContext, EShaderTargetStage.Vertex);
 			m_sharedLightBuffer.BindBuffer(deviceContext, EShaderTargetStage.Pixel);
+			m_perObjectLightBuffer.BindBuffer(deviceContext, EShaderTargetStage.Vertex);
 			m_perObjectLightBuffer.BindBuffer(deviceContext, EShaderTargetStage.Pixel);
+		}
+
+		public void GenerateShadowMaps(Device device, DeviceContext deviceContext, CRenderScene renderScene)
+		{
+			// Store current render targets. Accourding to the function description we need to release these temporary interfaces 
+			DepthStencilView depthStencilRestore;
+			RenderTargetView[] renderTargetRestore = deviceContext.OutputMerger.GetRenderTargets(1, out depthStencilRestore);
+			RawViewportF[] viewPortsRestore = deviceContext.Rasterizer.GetViewports<RawViewportF>();
+			DepthStencilState depthStenctilStateRestore = deviceContext.OutputMerger.DepthStencilState;
+			RasterizerState rasterizerRestore = deviceContext.Rasterizer.State;
+
+			int shadowMapSlotOffset = 0;
+			int cubeShadowMapSlotOffset = 0;
+
+			// Unbind texture resources
+			for (int i = CubeShadowMapBaseSlot; i < CubeShadowMapBaseSlot + MaxCubeShadowMaps; i++)
+			{
+				deviceContext.PixelShader.SetShaderResource(i, null);
+			}
+
+			for (int i = ShadowMapBaseSlot; i < ShadowMapBaseSlot + MaxShadowMaps; i++)
+			{
+				deviceContext.PixelShader.SetShaderResource(i, null);
+			}
+
+			// Generate shadow maps for all active lights
+			foreach (CDirectionalLight directionalLight in m_directionalLights)
+			{
+				if (directionalLight.IsCastingShadow() && !directionalLight.NeedsShadowMapInit())
+				{
+					// Init Shadow Map
+				}
+			}
+			
+			foreach (CPositionalLight positionalLight in m_positionalLights)
+			{
+				if (positionalLight.IsCastingShadow() && !positionalLight.NeedsShadowMapInit())
+				{
+					if (positionalLight.IsShadowMapCube())
+					{
+						if (cubeShadowMapSlotOffset < MaxCubeShadowMaps)
+						{
+							positionalLight.GenerateShadowMaps(device, deviceContext, renderScene);
+							positionalLight.ShadowMapRegister = CubeShadowMapBaseSlot + cubeShadowMapSlotOffset;
+							deviceContext.PixelShader.SetShaderResource(CubeShadowMapBaseSlot + cubeShadowMapSlotOffset, positionalLight.GetShadowMapView());
+							cubeShadowMapSlotOffset++;
+						}
+					}
+					else
+					{
+						if (shadowMapSlotOffset < MaxShadowMaps)
+						{
+							positionalLight.GenerateShadowMaps(device, deviceContext, renderScene);
+							positionalLight.ShadowMapRegister = ShadowMapBaseSlot + shadowMapSlotOffset;
+							deviceContext.PixelShader.SetShaderResource(ShadowMapBaseSlot + shadowMapSlotOffset, positionalLight.GetShadowMapView());
+							shadowMapSlotOffset++;
+						}
+					}
+				}
+			}
+			m_shadowMapSamplers.SetSamplers(deviceContext);
+
+			// Restore previous render targets
+			deviceContext.OutputMerger.SetRenderTargets(depthStencilRestore, renderTargetRestore);
+			deviceContext.Rasterizer.SetViewports(viewPortsRestore);
+			deviceContext.Rasterizer.State = rasterizerRestore;
+			deviceContext.OutputMerger.DepthStencilState = depthStenctilStateRestore;
+
+			//Dispose temporary interfaces
+			depthStencilRestore?.Dispose();
+			depthStenctilStateRestore?.Dispose();
+			rasterizerRestore?.Dispose();
+
+			foreach (RenderTargetView renderTargetView in renderTargetRestore)
+			{
+				renderTargetView?.Dispose();
+			}
+		}
+
+		public void InitShadowMapsIfNeeded(Device device)
+		{
+			foreach (CDirectionalLight directionalLight in m_directionalLights)
+			{
+				if (directionalLight.IsCastingShadow() && directionalLight.NeedsShadowMapInit())
+				{
+					// Init Shadow Map
+				}
+			}
+
+			foreach (CPositionalLight positionalLight in m_positionalLights)
+			{
+				if (positionalLight.IsCastingShadow() && positionalLight.NeedsShadowMapInit())
+				{
+					positionalLight.InitializeShadowMaps(device);
+				}
+			}
 		}
 
 		public void Update(DeviceContext deviceContext)
@@ -46,6 +152,11 @@ namespace KlaxRenderer.Lights
 		{
 			m_sharedLightBuffer.Dispose();
 			m_perObjectLightBuffer.Dispose();
+
+			foreach (CPositionalLight positionalLight in m_positionalLights)
+			{
+				positionalLight.Dispose();				
+			}
 		}
 
 		public int AddLight(ILight newLight)
@@ -85,6 +196,7 @@ namespace KlaxRenderer.Lights
 			else
 			{
 				CPositionalLight positionalLight = (CPositionalLight)lightToRemove;
+				positionalLight.Dispose();
 				m_positionalLights.Remove(positionalLight);
 			}
 		}
@@ -108,7 +220,8 @@ namespace KlaxRenderer.Lights
 			else
 			{
 				if (index >= 0 && index < m_positionalLights.Count)
-				{
+				{					
+					m_positionalLights[index].Dispose();
 					m_positionalLights.RemoveAt(index);
 				}
 			}
@@ -119,5 +232,6 @@ namespace KlaxRenderer.Lights
 		private readonly List<CAmbientLight> m_ambientLights = new List<CAmbientLight>();
 		private readonly SharedLightBuffer m_sharedLightBuffer = new SharedLightBuffer();
 		private readonly PerObjectLightBuffer m_perObjectLightBuffer = new PerObjectLightBuffer();
+		private readonly CShadowMapSamplers m_shadowMapSamplers = new CShadowMapSamplers();
 	}
 }
