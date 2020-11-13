@@ -5,6 +5,7 @@ using KlaxMath;
 using KlaxMath.Geometry;
 using KlaxRenderer.Debug;
 using KlaxRenderer.Graphics;
+using KlaxRenderer.Graphics.Shader;
 using KlaxShared;
 using KlaxShared.Attributes;
 using SharpDX;
@@ -62,6 +63,11 @@ namespace KlaxRenderer.RenderNodes
 			{
 				m_mesh.Render(deviceContext, m_transform);
 			}
+		}
+
+		internal override void DrawWithShader(DeviceContext deviceContext, CShaderResource shaderResource)
+		{
+			m_mesh.RenderWithShader(deviceContext, shaderResource, m_transform);
 		}
 
 		public override bool TryCreateResources()
@@ -151,6 +157,11 @@ namespace KlaxRenderer.RenderNodes
 		{
 			BoundingBox boundingBox = m_mesh.BoundingBox.TransformBoundingBox(m_transform.WorldMatrix);
 			return frustum.Contains(ref boundingBox);
+		}
+		public override ContainmentType BoundingBoxTest(in BoundingBox boundingBox)
+		{
+			BoundingBox meshBoundingBox = m_mesh.BoundingBox.TransformBoundingBox(m_transform.WorldMatrix);
+			return boundingBox.Contains(ref meshBoundingBox);
 		}
 
 		private void FinishLoading()

@@ -27,6 +27,7 @@ namespace KlaxCore.GameFramework.Lighting
 			pointLight.Range = m_range;
 			pointLight.LightColor = LightColor;
 			pointLight.Enabled = Enabled;
+			pointLight.IsCastingShadows = CastShadow;
 			pointLight.Transform.Parent = m_transform;
 			m_renderLight = pointLight;
 		}
@@ -40,6 +41,7 @@ namespace KlaxCore.GameFramework.Lighting
 			pointLight.Range = m_range;
 			pointLight.LightColor = LightColor;
 			pointLight.Enabled = Enabled;
+			pointLight.IsCastingShadows = CastShadow;
 		}
 
 		[JsonProperty]
@@ -80,6 +82,16 @@ namespace KlaxCore.GameFramework.Lighting
 		{
 			get { return m_quadraticAttenuation; }
 			set { m_quadraticAttenuation = value; MarkRenderStateDirty(); }
+		}
+
+		[JsonProperty]
+		private bool m_bCastShadow = true;
+		[KlaxProperty(Category = "Light")]
+		[JsonIgnore]
+		public bool CastShadow
+		{
+			get { return m_bCastShadow; }
+			set { m_bCastShadow = value; MarkRenderStateDirty(); }
 		}
 	}
 }

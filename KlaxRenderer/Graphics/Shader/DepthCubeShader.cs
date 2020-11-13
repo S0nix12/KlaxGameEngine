@@ -1,28 +1,32 @@
-﻿using KlaxShared;
-using KlaxShared.Definitions.Graphics;
+﻿using KlaxShared.Definitions.Graphics;
 using SharpDX.Direct3D11;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace KlaxRenderer.Graphics
+namespace KlaxRenderer.Graphics.Shader
 {
-    class CColorShader : CShader
-    {
-		public CColorShader() : base()
+	class CDepthCubeShader : CShader
+	{
+		public CDepthCubeShader() : base()
 		{
-			VSFileName = "Resources/Shaders/ColorShader.hlsl";
-			PSFileName = "Resources/Shaders/ColorShader.hlsl";
+			VSFileName = "Resources/Shaders/DepthCubeShader.hlsl";
+			GSFileName = "Resources/Shaders/DepthCubeShader.hlsl";
+			PSFileName = "Resources/Shaders/DepthCubeShader.hlsl";
 
 			InputElements = new[]
 			{
-				new InputElement("POSITION", 0, SharpDX.DXGI.Format.R32G32B32_Float, 0),
-				new InputElement("COLOR", 0, SharpDX.DXGI.Format.R32G32B32A32_Float, 0)
+				new InputElement("POSITION", 0, SharpDX.DXGI.Format.R32G32B32_Float, 0)
 			};
 		}
 
-        public override void Dispose()
-        {
+		public override void Dispose()
+		{
 			base.Dispose();
-            m_matrixBuffer.Dispose();
-        }
+			m_matrixBuffer.Dispose();
+		}
 
 		protected override void InitShaderBuffers(Device device)
 		{
@@ -42,7 +46,7 @@ namespace KlaxRenderer.Graphics
 
 			AddShaderBufferDeclaration(in matrixBufferDeclaration);
 		}
-		
-        private SharpDX.Direct3D11.Buffer m_matrixBuffer;
-    }
+
+		private SharpDX.Direct3D11.Buffer m_matrixBuffer;
+	}
 }

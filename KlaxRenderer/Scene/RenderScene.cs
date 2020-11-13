@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using KlaxIO.AssetManager.Assets;
 using KlaxMath;
 using KlaxMath.Geometry;
 using KlaxRenderer.Camera;
 using KlaxRenderer.Debug;
 using KlaxRenderer.Graphics;
+using KlaxRenderer.Graphics.Shader;
 using KlaxRenderer.Lights;
 using KlaxRenderer.RenderNodes;
 using KlaxRenderer.Scene.Commands;
@@ -28,6 +30,7 @@ namespace KlaxRenderer.Scene
 		{
 			SceneRenderer.Init(renderSurface, device);
 			m_cameraBuffer.Init(device);
+			m_cubeCameraBuffer.Init(device);
 
 			LightManager.Init(device, deviceContext);
 		}
@@ -71,12 +74,25 @@ namespace KlaxRenderer.Scene
 				m_viewInfo.ProjectionMatrix = Matrix.PerspectiveFovLH(m_viewInfo.Fov, screenAspect, m_viewInfo.ScreenNear, m_viewInfo.ScreenFar);
 			}
 
-			m_cameraBuffer.BindBuffer(deviceContext, EShaderTargetStage.Vertex);
-			m_cameraBuffer.UpdateBuffer(deviceContext, in m_viewInfo);
+			UserDefinedAnnotation annotation = deviceContext.QueryInterface<UserDefinedAnnotation>();
 
+
+			annotation.BeginEvent("ShadowMapPass");
+			LightManager.InitShadowMapsIfNeeded(device);
+			LightManager.GenerateShadowMaps(device, deviceContext, this);
+			annotation.EndEvent();
+
+			annotation.BeginEvent("LightUpdatePass");
 			LightManager.BindBuffer(deviceContext);
 			LightManager.Update(deviceContext);
 			LightManager.UpdatePerObjectLights(deviceContext, null);
+			annotation.EndEvent();
+
+			annotation.BeginEvent("SceneColorPass"); 
+
+			m_cameraBuffer.BindBuffer(deviceContext, EShaderTargetStage.Vertex);
+			m_cameraBuffer.UpdateBuffer(deviceContext, in m_viewInfo);
+
 			BoundingFrustum cameraFrustum = m_viewInfo.CameraFrustum;
 
 			for (int i = 0; i < m_activeRenderNodes.Count; i++)
@@ -87,7 +103,51 @@ namespace KlaxRenderer.Scene
 				}
 			}
 
+			annotation.EndEvent();
+			annotation.BeginEvent("SceneDebugPass");
 			DebugRenderer.Draw(deviceContext, in m_viewInfo);
+			annotation.EndEvent();
+			annotation.Dispose();
+		}
+
+		public void RenderSceneDepth(Device device, DeviceContext deviceContext, in SSceneViewInfo viewInfo)
+		{
+			m_cameraBuffer.BindBuffer(deviceContext, EShaderTargetStage.Vertex);
+			m_cameraBuffer.BindBuffer(deviceContext, EShaderTargetStage.Pixel);
+			m_cameraBuffer.UpdateBuffer(deviceContext, in viewInfo);
+			CShaderResource depthShader = CRenderer.Instance.ResourceManager.DepthShader;
+
+			BoundingFrustum cameraFrustum = viewInfo.CameraFrustum;
+			for (int i = 0; i < m_activeRenderNodes.Count; i++)
+			{
+				if (m_activeRenderNodes[i].FrustumTest(in cameraFrustum) != ContainmentType.Disjoint)
+				{
+					m_activeRenderNodes[i].DrawWithShader(deviceContext, depthShader);
+				}
+			}
+		}
+
+		public void RenderSceneDepthCube(DeviceContext deviceContext, in SSceneViewInfo viewInfo)
+		{
+			BoundingBox boundingBox = new BoundingBox();
+			boundingBox.Minimum = new Vector3(-viewInfo.ScreenFar);
+			boundingBox.Minimum += viewInfo.ViewLocation;
+			boundingBox.Maximum = new Vector3(viewInfo.ScreenFar);
+			boundingBox.Maximum += viewInfo.ViewLocation;
+
+			m_cubeCameraBuffer.UpdateBuffer(deviceContext, in viewInfo);
+			m_cubeCameraBuffer.BindBuffer(deviceContext, EShaderTargetStage.Geometry);
+			m_cubeCameraBuffer.BindBuffer(deviceContext, EShaderTargetStage.Pixel);
+
+			CShaderResource depthShader = CRenderer.Instance.ResourceManager.DepthCubeShader;
+
+			for (int i = 0; i < m_activeRenderNodes.Count; i++)
+			{
+				if (m_activeRenderNodes[i].BoundingBoxTest(in boundingBox) != ContainmentType.Disjoint)
+				{
+					m_activeRenderNodes[i].DrawWithShader(deviceContext, depthShader);
+				}
+			}
 		}
 
 		public void AddCommand(IRenderSceneCommand command)
@@ -177,6 +237,7 @@ namespace KlaxRenderer.Scene
 		public CDebugRenderer DebugRenderer { get; private set; } = new CDebugRenderer();
 
 		private readonly CCameraShaderBuffer m_cameraBuffer = new CCameraShaderBuffer();
+		private readonly CCubeCameraShaderBuffer m_cubeCameraBuffer = new CCubeCameraShaderBuffer();
 		private readonly List<CRenderNode> m_activeRenderNodes = new List<CRenderNode>();
 		private readonly List<CRenderNode> m_pendingRenderNodes = new List<CRenderNode>();
 		private readonly List<IRenderSceneCommand> m_sceneCommands = new List<IRenderSceneCommand>();

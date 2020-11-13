@@ -21,8 +21,8 @@ namespace KlaxRenderer.Graphics
         public CD3DRenderer()
         {
             Configuration.EnableObjectTracking = false;
-            Configuration.EnableTrackingReleaseOnFinalizer = true;
-            ComObject.LogMemoryLeakWarning = (warning) => System.Diagnostics.Trace.WriteLine(warning);
+            Configuration.EnableTrackingReleaseOnFinalizer = false;
+            ComObject.LogMemoryLeakWarning = (warning) => System.Diagnostics.Trace.WriteLine(warning);			
 
             m_uiRenderer = new ImGuiRenderer();
         }

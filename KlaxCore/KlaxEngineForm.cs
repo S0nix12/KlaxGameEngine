@@ -20,10 +20,10 @@ namespace KlaxCore
 	[System.ComponentModel.DesignerCategory("")]
 	class KlaxEngineForm : RenderForm
 	{
-		[CVar]
-		public static int WindowWidth { get; set; }
-		[CVar]
-		public static int WindowHeight { get; set; }
+		[CVar(1280)]
+		public static int WindowWidth { get; set; } = 1280;
+		[CVar(720)]
+		public static int WindowHeight { get; set; } = 720;
 
 		private const int WM_CHAR = 0x0102;
 

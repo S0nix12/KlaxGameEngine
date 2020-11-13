@@ -28,6 +28,12 @@ namespace KlaxShared.Definitions.Graphics
 		Hull
 	}
 
+	public struct SShaderParameterNames
+	{
+		public static readonly SHashedName WorldMatrixParameterName = new SHashedName("worldMatrix");
+		public static readonly SHashedName InvTransWorldMatrixParName = new SHashedName("invTransposeWorldMatrix");
+	}
+
 	[JsonConverter(typeof(CShaderParameterConverter))]
 	public struct SShaderParameter
 	{

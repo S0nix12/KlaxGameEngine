@@ -29,6 +29,7 @@ namespace KlaxCore.GameFramework.Lighting
 			spotLight.LightColor = LightColor;
 			spotLight.Enabled = Enabled;
 			spotLight.Transform.Parent = m_transform;
+			spotLight.IsCastingShadows = CastShadow;
 			m_renderLight = spotLight;
 		}
 
@@ -42,6 +43,7 @@ namespace KlaxCore.GameFramework.Lighting
 			spotLight.SpotAngle = SpotAngle;
 			spotLight.LightColor = LightColor;
 			spotLight.Enabled = Enabled;
+			spotLight.IsCastingShadows = CastShadow;
 		}
 
 		[JsonProperty]

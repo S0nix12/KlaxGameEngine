@@ -107,14 +107,14 @@ namespace KlaxRenderer.Scene
 			RasterizerStateDescription rasterizerStateDescription;
 			rasterizerStateDescription.IsAntialiasedLineEnabled = false;
 			rasterizerStateDescription.CullMode = CullMode.Back;
-			rasterizerStateDescription.DepthBias = 0;
-			rasterizerStateDescription.DepthBiasClamp = 0.0f;
+			rasterizerStateDescription.DepthBias = 1;
+			rasterizerStateDescription.DepthBiasClamp = 0.0001f;
 			rasterizerStateDescription.IsDepthClipEnabled = true;
 			rasterizerStateDescription.FillMode = Wireframe ? FillMode.Wireframe : FillMode.Solid;
 			rasterizerStateDescription.IsFrontCounterClockwise = false;
 			rasterizerStateDescription.IsMultisampleEnabled = false;
 			rasterizerStateDescription.IsScissorEnabled = false;
-			rasterizerStateDescription.SlopeScaledDepthBias = 0.0f;
+			rasterizerStateDescription.SlopeScaledDepthBias = 0.0001f;
 
 			RasterizerState = new RasterizerState(device, rasterizerStateDescription);
 			oldState?.Dispose();

@@ -92,7 +92,10 @@ namespace KlaxRenderer.Graphics.UI
 				{
 					return;
 				}
-				
+
+				UserDefinedAnnotation annotation = m_d3DeviceContext.QueryInterface<UserDefinedAnnotation>();
+				annotation.BeginEvent("ImguiPass");
+
 				// Grow buffers in case they are to small
 				if (m_vertexBufferSize < drawData.TotalVtxCount || m_indexBufferSize < drawData.TotalIdxCount)
 				{
@@ -188,6 +191,9 @@ namespace KlaxRenderer.Graphics.UI
 				prevRasterizerState?.Dispose();
 				prevBlendState?.Dispose();
 				prevDepthState?.Dispose();
+
+				annotation.EndEvent();
+				annotation.Dispose();				
 			}
 		}
 

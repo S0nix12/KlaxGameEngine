@@ -16,7 +16,7 @@ namespace KlaxCore.GameFramework.Assets.Serializer
 			m_serializerSettings = new JsonSerializerSettings();
 			m_serializerSettings.Formatting = Formatting.Indented;
 			m_serializerSettings.NullValueHandling = NullValueHandling.Ignore;
-			m_serializerSettings.DefaultValueHandling = DefaultValueHandling.Ignore;
+			m_serializerSettings.DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate;
 			m_serializerSettings.TypeNameHandling = TypeNameHandling.Auto;
 			m_serializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 			m_serializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.All;

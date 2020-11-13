@@ -80,9 +80,9 @@ namespace KlaxRenderer.Graphics
 
 		public void Render(DeviceContext deviceContext, in Matrix worldMatrix)
         {
-			SetMatrixParameter(WorldMatrixParameterName, in worldMatrix);
+			SetMatrixParameter(SShaderParameterNames.WorldMatrixParameterName, in worldMatrix);
 	        Matrix invTranspose = Matrix.Transpose(Matrix.Invert(worldMatrix));
-			SetMatrixParameter(InvTransWorldMatrixParName, in invTranspose);
+			SetMatrixParameter(SShaderParameterNames.InvTransWorldMatrixParName, in invTranspose);
 			ShaderResource.Shader.SetShaderParameters(deviceContext, m_activeParameters);
 	        ShaderResource.Shader.SetActive(deviceContext);
         }

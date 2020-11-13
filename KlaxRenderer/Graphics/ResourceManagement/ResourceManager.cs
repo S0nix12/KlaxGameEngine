@@ -21,6 +21,8 @@ namespace KlaxRenderer.Graphics.ResourceManagement
 		public void InitDefaultResources(DeviceContext deviceContext)
 		{
 			DefaultShader = RequestShaderResource(new SHashedName("SimpleLitShader"));
+			DepthShader = RequestShaderResource(new SHashedName("depthShader"));
+			DepthCubeShader = RequestShaderResource(new SHashedName("depthCubeShader"));
 
 			DefaultTexture = new CTextureSampler(m_graphicsDevice, deviceContext, "Resources/Textures/DefaultTexture.tga");
 			FallbackTexture = new CTextureSampler(m_graphicsDevice, deviceContext, "Resources/Textures/MissingTexture.tga");
@@ -46,6 +48,8 @@ namespace KlaxRenderer.Graphics.ResourceManagement
 		public void Dispose()
 		{
 			DefaultShader.Dispose();
+			DepthShader.Dispose();			
+			DepthCubeShader.Dispose();
 			DefaultTexture.Dispose();
 			FallbackTexture.Dispose();
 			WhiteTexture.Dispose();
@@ -186,5 +190,7 @@ namespace KlaxRenderer.Graphics.ResourceManagement
 		public CMaterial DefaultTextureMaterial { get; private set; }
 		public CMaterial MissingTextureMaterial { get; private set; }
 		public CShaderResource DefaultShader { get; private set; }
+		public CShaderResource DepthShader { get; private set; }
+		public CShaderResource DepthCubeShader { get; private set; }
 	}
 }

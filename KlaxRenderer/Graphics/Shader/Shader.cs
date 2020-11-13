@@ -17,12 +17,12 @@ namespace KlaxRenderer.Graphics
 		{
 			lock (m_shaderMutex)
 			{
-				Init(device, VSFileName, PSFileName, VSEntryPoint, PSEntryPoint);
+				Init(device, VSFileName, PSFileName, GSFileName, VSEntryPoint, PSEntryPoint, GSEntryPoint);
 				return true;
 			}
 		}
 
-		public bool Init(Device device, string vertexShaderFilename, string pixelShaderFilename, string vertexShaderEntry, string pixelShaderEntry)
+		public bool Init(Device device, string vertexShaderFilename, string pixelShaderFilename, string geomShaderFilename, string vertexShaderEntry, string pixelShaderEntry, string geomShaderEntry)
 		{
 			if (m_bIsInitialized)
 			{
@@ -31,23 +31,41 @@ namespace KlaxRenderer.Graphics
 			m_bIsInitialized = true;
 
 			// TODO henning replace with proper shader loading and offline compile
-			using (var vertexShaderByteCode = ShaderBytecode.CompileFromFile(vertexShaderFilename, vertexShaderEntry, "vs_4_0", ShaderFlags.Debug))
+			if (!string.IsNullOrEmpty(vertexShaderFilename))
 			{
-				if (vertexShaderByteCode.HasErrors)
+				using (var vertexShaderByteCode = ShaderBytecode.CompileFromFile(vertexShaderFilename, vertexShaderEntry, "vs_5_0", ShaderFlags.Debug))
 				{
-					throw new Exception(vertexShaderByteCode.Message);
+					if (vertexShaderByteCode.HasErrors)
+					{
+						throw new Exception(vertexShaderByteCode.Message);
+					}
+					m_vertexShader = new VertexShader(device, vertexShaderByteCode);
+					m_vertexShaderSignature = ShaderSignature.GetInputSignature(vertexShaderByteCode);
 				}
-				m_vertexShader = new VertexShader(device, vertexShaderByteCode);
-				m_vertexShaderSignature = ShaderSignature.GetInputSignature(vertexShaderByteCode);
 			}
 
-			using (var pixelShaderByteCode = ShaderBytecode.CompileFromFile(pixelShaderFilename, pixelShaderEntry, "ps_4_0", ShaderFlags.Debug))
+			if (!string.IsNullOrEmpty(pixelShaderFilename))
 			{
-				if (pixelShaderByteCode.HasErrors)
+				using (var pixelShaderByteCode = ShaderBytecode.CompileFromFile(pixelShaderFilename, pixelShaderEntry, "ps_5_0", ShaderFlags.Debug))
 				{
-					throw new Exception(pixelShaderByteCode.Message);
+					if (pixelShaderByteCode.HasErrors)
+					{
+						throw new Exception(pixelShaderByteCode.Message);
+					}
+					m_pixelShader = new PixelShader(device, pixelShaderByteCode);
 				}
-				m_pixelShader = new PixelShader(device, pixelShaderByteCode);
+			}
+
+			if (!string.IsNullOrEmpty(geomShaderFilename))
+			{
+				using (var geomShaderByteCode = ShaderBytecode.CompileFromFile(geomShaderFilename, geomShaderEntry, "gs_5_0", ShaderFlags.Debug))
+				{
+					if (geomShaderByteCode.HasErrors)
+					{
+						throw new Exception(geomShaderByteCode.Message);
+					}
+					m_geometryShader = new GeometryShader(device, geomShaderByteCode);
+				}
 			}
 
 			// TODO henning read from ShaderReflection
@@ -85,6 +103,7 @@ namespace KlaxRenderer.Graphics
 
 			deviceContext.VertexShader.Set(m_vertexShader);
 			deviceContext.PixelShader.Set(m_pixelShader);
+			deviceContext.GeometryShader.Set(m_geometryShader);			
 			deviceContext.InputAssembler.InputLayout = m_inputLayout;
 
 			m_shaderParamsSet = false;
@@ -92,10 +111,10 @@ namespace KlaxRenderer.Graphics
 
 		public virtual void Dispose()
 		{
-			m_vertexShader.Dispose();
-			m_pixelShader.Dispose();
+			m_vertexShader?.Dispose();
+			m_pixelShader?.Dispose();
+			m_geometryShader?.Dispose();
 			m_inputLayout.Dispose();
-			m_currentOpenBuffer?.Dispose();
 		}
 
 		protected abstract void InitShaderBuffers(Device device);
@@ -143,21 +162,22 @@ namespace KlaxRenderer.Graphics
 		{
 			foreach (CShaderBufferDeclaration bufferDeclaration in m_bufferDeclarations)
 			{
-				OpenTargetBuffer(deviceContext, bufferDeclaration.targetBuffer, bufferDeclaration.targetSlot, bufferDeclaration.targetStage);
+				DataStream currentStream;
+				deviceContext.MapSubresource(bufferDeclaration.targetBuffer, MapMode.WriteDiscard, MapFlags.None, out currentStream);
 				foreach (var parameterTarget in bufferDeclaration.parameterTargets)
 				{
 					if (parameterTarget.parameterType == EShaderParameterType.Texture) continue;
 
 					if (parameters.ContainsKey(parameterTarget.parameterName))
 					{
-						WriteNonTextureParameterToBuffer(parameters[parameterTarget.parameterName], parameterTarget.offset);
+						WriteNonTextureParameterToBuffer(parameters[parameterTarget.parameterName], parameterTarget.offset, currentStream);
 					}
 					else
 					{
-						WriteDefaultNonTextureParameterToBuffer(parameterTarget);
+						WriteDefaultNonTextureParameterToBuffer(parameterTarget, currentStream);
 					}
 				}
-				CloseAndSetCurrentBuffer(deviceContext);
+				CloseAndSetCurrentBuffer(deviceContext, bufferDeclaration.targetBuffer, bufferDeclaration.targetSlot, bufferDeclaration.targetStage);
 			}
 
 			foreach (SShaderTextureTarget textureTarget in m_textureTargets)
@@ -245,100 +265,96 @@ namespace KlaxRenderer.Graphics
 			}
 		}
 
-		private void WriteNonTextureParameterToBuffer(SShaderParameter shaderParam, int offset)
+		private void WriteNonTextureParameterToBuffer(SShaderParameter shaderParam, int offset, DataStream stream)
 		{
-			m_currentOpenStream.Position = offset;
+			stream.Position = offset;
 			// Write to the data stream to update our buffer
 			switch (shaderParam.parameterType)
 			{
 				case EShaderParameterType.Scalar:
-					m_currentOpenStream.Write((float)shaderParam.parameterData);
+					stream.Write((float)shaderParam.parameterData);
 					break;
 				case EShaderParameterType.Vector:
-					m_currentOpenStream.Write((Vector3)shaderParam.parameterData);
+					stream.Write((Vector3)shaderParam.parameterData);
 					break;
 				case EShaderParameterType.Color:
-					m_currentOpenStream.Write((Vector4)shaderParam.parameterData);
+					stream.Write((Vector4)shaderParam.parameterData);
 					break;
 				case EShaderParameterType.Matrix:
-					m_currentOpenStream.Write(Matrix.Transpose((Matrix)shaderParam.parameterData));
+					stream.Write(Matrix.Transpose((Matrix)shaderParam.parameterData));
 					break;
 				default:
 					throw new ArgumentException("ShaderParameterType not handled type was: " + shaderParam.parameterType);
 			}
 		}
-		private void WriteDefaultNonTextureParameterToBuffer(SShaderParameterTarget parameterTarget)
+		private void WriteDefaultNonTextureParameterToBuffer(SShaderParameterTarget parameterTarget, DataStream stream)
 		{
-			m_currentOpenStream.Position = parameterTarget.offset;
+			stream.Position = parameterTarget.offset;
 			switch (parameterTarget.parameterType)
 			{
 				case EShaderParameterType.Scalar:
-					m_currentOpenStream.Write(0.0f);
+					stream.Write(0.0f);
 					break;
 				case EShaderParameterType.Vector:
-					m_currentOpenStream.Write(Vector3.Zero);
+					stream.Write(Vector3.Zero);
 					break;
 				case EShaderParameterType.Color:
-					m_currentOpenStream.Write(Vector4.Zero);
+					stream.Write(Vector4.Zero);
 					break;
 				case EShaderParameterType.Matrix:
-					m_currentOpenStream.Write(Matrix.Identity);
+					stream.Write(Matrix.Identity);
 					break;
 			}
 		}
 
-		private void OpenTargetBuffer(DeviceContext deviceContext, Buffer buffer, int targetSlot, EShaderTargetStage targetStage)
+		private void OpenTargetBuffer(DeviceContext deviceContext, Buffer buffer, int targetSlot, EShaderTargetStage targetStage, out DataStream outStream)
 		{
 			// Open the target buffer
-			deviceContext.MapSubresource(buffer, MapMode.WriteDiscard, MapFlags.None, out m_currentOpenStream);
-			m_currentOpenBuffer = buffer;
-			m_currentTargetSlot = targetSlot;
-			m_currentTargetStage = targetStage;
+			deviceContext.MapSubresource(buffer, MapMode.WriteDiscard, MapFlags.None, out outStream);
 		}
-		private void CloseAndSetCurrentBuffer(DeviceContext deviceContext)
+		private void CloseAndSetCurrentBuffer(DeviceContext deviceContext, Buffer buffer, int targetSlot, EShaderTargetStage targetStage)
 		{
 			// Close the previous buffer
-			deviceContext.UnmapSubresource(m_currentOpenBuffer, 0);
-			m_currentOpenStream.Dispose();
-			m_currentOpenStream = null;
+			deviceContext.UnmapSubresource(buffer, 0);
 
-			switch (m_currentTargetStage)
+			switch (targetStage)
 			{
 				case EShaderTargetStage.Vertex:
-					deviceContext.VertexShader.SetConstantBuffer(m_currentTargetSlot, m_currentOpenBuffer);
+					deviceContext.VertexShader.SetConstantBuffer(targetSlot, buffer);
 					break;
 				case EShaderTargetStage.Pixel:
-					deviceContext.PixelShader.SetConstantBuffer(m_currentTargetSlot, m_currentOpenBuffer);
+					deviceContext.PixelShader.SetConstantBuffer(targetSlot, buffer);
 					break;
 				case EShaderTargetStage.Geometry:
-					deviceContext.GeometryShader.SetConstantBuffer(m_currentTargetSlot, m_currentOpenBuffer);
+					deviceContext.GeometryShader.SetConstantBuffer(targetSlot, buffer);
 					break;
 				case EShaderTargetStage.Compute:
-					deviceContext.ComputeShader.SetConstantBuffer(m_currentTargetSlot, m_currentOpenBuffer);
+					deviceContext.ComputeShader.SetConstantBuffer(targetSlot, buffer);
 					break;
 				case EShaderTargetStage.Domain:
-					deviceContext.DomainShader.SetConstantBuffer(m_currentTargetSlot, m_currentOpenBuffer);
+					deviceContext.DomainShader.SetConstantBuffer(targetSlot, buffer);
 					break;
 				case EShaderTargetStage.Hull:
-					deviceContext.HullShader.SetConstantBuffer(m_currentTargetSlot, m_currentOpenBuffer);
+					deviceContext.HullShader.SetConstantBuffer(targetSlot, buffer);
 					break;
 			}
-
-			m_currentOpenBuffer = null;
-			m_currentTargetSlot = 0;
-			m_currentTargetStage = EShaderTargetStage.Vertex;
 		}
 
 		/// <summary>
-		/// Filename of the associated vertex shader, only needed when the shader is not initialized with precompiled byte-code
+		/// Filename of the associated vertex shader, only needed when the shader is not initialized with precompiled byte-code, if empty no vertix shader is loaded
 		/// </summary>
 		public string VSFileName
-		{ get; set; }
+		{ get; set; } = null;
 		/// <summary>
-		/// Filename of the associated pixel shader, only needed when the shader is not initialized with precompiled byte-code
+		/// Filename of the associated pixel shader, only needed when the shader is not initialized with precompiled byte-code, if empty no pixel shader is loaded
 		/// </summary>
 		public string PSFileName
-		{ get; set; }
+		{ get; set; } = null;
+		/// <summary>
+		/// Filename of the associated geometry shader, only needed when the shader is not initialized with precompiled byte-code, if empty no geom shader is loaded
+		/// </summary>
+		public string GSFileName
+		{ get; set; } = null;
 		/// <summary>
 		/// Name of the vertex shader entry point
 		/// </summary>
@@ -349,20 +365,22 @@ namespace KlaxRenderer.Graphics
 		/// </summary>
 		public string PSEntryPoint
 		{ get; set; } = "Pixel";
+		/// <summary>
+		/// Name of the geometry shader entry point
+		/// </summary>
+		public string GSEntryPoint
+		{ get; set; } = "Geometry";
 
 		public InputElement[] InputElements { get; protected set; }
 
 		// Protected Fields
 		protected VertexShader m_vertexShader;
 		protected PixelShader m_pixelShader;
+		protected GeometryShader m_geometryShader;
 
 		// Private Fields
 		private List<CShaderBufferDeclaration> m_bufferDeclarations = new List<CShaderBufferDeclaration>();
 		private List<SShaderTextureTarget> m_textureTargets = new List<SShaderTextureTarget>();
-		private Buffer m_currentOpenBuffer;
-		private DataStream m_currentOpenStream;
-		private EShaderTargetStage m_currentTargetStage = EShaderTargetStage.Vertex;
-		private int m_currentTargetSlot;
 		private ShaderSignature m_vertexShaderSignature;
 		private InputLayout m_inputLayout;
 
